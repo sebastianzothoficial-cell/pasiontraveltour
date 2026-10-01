@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER="5491162308389";
+const WHATSAPP_NUMBER="5548996752532";
 function whatsappUrl(message){return "https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);}
 const menuBtn=document.querySelector("#menuBtn");
 const nav=document.querySelector(".main-nav");
