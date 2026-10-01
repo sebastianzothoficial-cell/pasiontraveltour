@@ -20,8 +20,8 @@ process:{eyebrow:"CÓMO FUNCIONA",title:"De tu idea al viaje.",tell:"Contanos",t
 seo:{eyebrow:"IDEAS PARA TU VIAJE",title:"Empezá por lo que querés vivir.",couples:"Buenos Aires para parejas →",families:"Buenos Aires para familias →",football:"Fútbol en Buenos Aires →",tango:"Tango en Buenos Aires →",food:"Gastronomía argentina →",travel:"Viaje a Buenos Aires →"},
 contact:{eyebrow:"¿VIAJAMOS?",title:"Contanos cómo imaginás tu viaje.",copy:"Contanos las fechas, cuántos viajan y qué tipo de experiencia buscás. Te respondemos por WhatsApp con una propuesta para tu viaje."},
 form:{name:"Nombre",namePh:"Tu nombre",destination:"Destino",destinationChoose:"Elegí un destino",custom:"Paquete a medida",dates:"Fechas",datesPh:"Ej.: 10 al 15 de noviembre",travelers:"Viajeros",travelersPh:"Ej.: 2 adultos",message:"Mensaje",messagePh:"Fechas, cantidad de viajeros y qué te gustaría hacer...",submit:"Enviar por WhatsApp  ›"},
-footer:{tagline:"Tu viaje, nuestra pasión."},
-trips:["Pareja","Escapada romántica","Familia","Fútbol","Tango y noche porteña","Gastronomía y vino","Experiencias especiales","Viaje completo a medida","Quiero algo diferente"]
+exp:{custom:"Buenos Aires a tu medida",customSub:"Rutas de 24, 48 o 72 horas y propuestas personalizadas.",tango:"Tango & noche porteña",tangoSub:"Cena, show y experiencias de tango según tu estilo.",football:"Fútbol argentino",footballSub:"Estadios, barrios, historia y pasión futbolera.",tigre:"Tigre & Delta",tigreSub:"Navegación, naturaleza y escapadas desde Buenos Aires.",food:"Gastronomía & asado",foodSub:"Parrillas, vinos y experiencias gastronómicas.",special:"Momentos especiales",specialSub:"Fotografía, parejas, propuestas y celebraciones."},footer:{tagline:"Tu viaje, nuestra pasión."},brand:{tag:"TU VIAJE, NUESTRA PASIÓN"},destFooter:"ARGENTINA  •  EL MUNDO  •  EN UNA SOLA AGENCIA",
+tripSubs:["Un viaje para compartir.","Momentos especiales para dos.","Planes para disfrutar juntos.","Estadios, historia y pasión.","Cena, show y noche.","Sabores y experiencias locales.","Algo único para recordar.","Todo el viaje, pensado para vos.","Contanos qué tenés en mente."],trips:["Pareja","Escapada romántica","Familia","Fútbol","Tango y noche porteña","Gastronomía y vino","Experiencias especiales","Viaje completo a medida","Quiero algo diferente"]
 },
 pt:{
 "title":"Pasión Travel Tour | Buenos Aires e Argentina","description":"Pasión Travel Tour: receptivo em Buenos Aires e Argentina para viajantes do Brasil. Tango, futebol, gastronomia, casais, famílias, transfers e experiências sob medida. Fale pelo WhatsApp.",
@@ -38,7 +38,7 @@ seo:{eyebrow:"IDEIAS PARA SUA VIAGEM",title:"Comece pelo que você quer viver.",
 contact:{eyebrow:"VAMOS VIAJAR?",title:"Conte como você imagina sua viagem.",copy:"Conte as datas, quantas pessoas viajam e que experiência procura. Respondemos pelo WhatsApp com uma proposta para sua viagem."},
 form:{name:"Nome",namePh:"Seu nome",destination:"Destino",destinationChoose:"Escolha um destino",custom:"Pacote sob medida",dates:"Datas",datesPh:"Ex.: 10 a 15 de novembro",travelers:"Viajantes",travelersPh:"Ex.: 2 adultos",message:"Mensagem",messagePh:"Datas, número de viajantes e o que você gostaria de fazer...",submit:"Enviar pelo WhatsApp  ›"},
 footer:{tagline:"Sua viagem, nossa paixão."},
-trips:["Casal","Escapada romântica","Família","Futebol","Tango e noite portenha","Gastronomia e vinho","Experiências especiais","Viagem completa sob medida","Quero algo diferente"]
+tripSubs:["Uma viagem para compartilhar.","Momentos especiais para dois.","Planos para aproveitar juntos.","Estádios, história e paixão.","Jantar, show e noite.","Sabores e experiências locais.","Algo único para lembrar.","Toda a viagem, pensada para você.","Conte o que você tem em mente."],trips:["Casal","Escapada romântica","Família","Futebol","Tango e noite portenha","Gastronomia e vinho","Experiências especiais","Viagem completa sob medida","Quero algo diferente"]
 },
 en:{
 "title":"Pasión Travel Tour | Buenos Aires & Argentina","description":"Pasión Travel Tour: receptive travel in Buenos Aires and Argentina for travelers from Brazil. Tango, football, food, couples, families, transfers and tailor-made experiences.",
@@ -54,8 +54,7 @@ process:{eyebrow:"HOW IT WORKS",title:"From your idea to the trip.",tell:"Tell u
 seo:{eyebrow:"TRIP IDEAS",title:"Start with what you want to experience.",couples:"Buenos Aires for couples →",families:"Buenos Aires for families →",football:"Football in Buenos Aires →",tango:"Tango in Buenos Aires →",food:"Argentine food & wine →",travel:"Trip to Buenos Aires →"},
 contact:{eyebrow:"LET'S TRAVEL?",title:"Tell us how you imagine your trip.",copy:"Tell us your dates, number of travelers and the experience you want. We'll reply on WhatsApp with a proposal."},
 form:{name:"Name",namePh:"Your name",destination:"Destination",destinationChoose:"Choose a destination",custom:"Tailor-made package",dates:"Dates",datesPh:"E.g. November 10–15",travelers:"Travelers",travelersPh:"E.g. 2 adults",message:"Message",messagePh:"Dates, number of travelers and what you'd like to do...",submit:"Send on WhatsApp  ›"},
-footer:{tagline:"Your trip, our passion."},
-trips:["Couples","Romantic getaway","Family","Football","Tango & Buenos Aires nightlife","Food & wine","Special experiences","Complete tailor-made trip","I want something different"]
+footer:{tagline:"Your trip, our passion."},brand:{tag:"YOUR TRIP, OUR PASSION"},destFooter:"ARGENTINA  •  THE WORLD  •  ONE AGENCY",exp:{custom:"Buenos Aires, your way",customSub:"24, 48 or 72-hour routes and personalized proposals.",tango:"Tango & Buenos Aires nightlife",tangoSub:"Dinner, shows and tango experiences in your style.",football:"Argentine football",footballSub:"Stadiums, neighborhoods, history and football passion.",tigre:"Tigre & Delta",tigreSub:"Boating, nature and escapes from Buenos Aires.",food:"Food & asado",foodSub:"Steakhouses, wine and culinary experiences.",special:"Special moments",specialSub:"Photography, couples, proposals and celebrations."},tripSubs:["A trip to share.","Special moments for two.","Plans to enjoy together.","Stadiums, history and passion.","Dinner, show and nightlife.","Local flavors and experiences.","Something unique to remember.","The whole trip, designed for you.","Tell us what you have in mind."],trips:["Couples","Romantic getaway","Family","Football","Tango & Buenos Aires nightlife","Food & wine","Special experiences","Complete tailor-made trip","I want something different"]
 }
 }};
 const waMessages={
@@ -71,9 +70,10 @@ function setLanguage(lang){
  document.querySelector('meta[name="description"]')?.setAttribute("content",t.description);
  document.querySelectorAll("[data-i18n]").forEach(el=>{const v=get(t,el.dataset.i18n);if(v!==undefined)el.textContent=v;});
  document.querySelectorAll("[data-ph]").forEach(el=>{const v=get(t,el.dataset.ph);if(v!==undefined)el.placeholder=v;});
+document.querySelectorAll("[data-trip-sub]").forEach((el,i)=>{const v=t.tripSubs?.[i];if(v)el.textContent=v;});
  const select=document.querySelector("#languageSelect");if(select)select.value=lang;
  document.querySelectorAll("[data-wa]").forEach(a=>{const k=a.dataset.wa;a.href=whatsappUrl(waMessages[lang]?.[k]||waMessages[lang].start);});
- const cards=document.querySelectorAll(".trip-card");cards.forEach((card,i)=>{const v=t.trips[i];if(v)card.querySelector("strong").textContent=v;});
+ const cards=document.querySelectorAll(".trip-card");cards.forEach((card,i)=>{const v=t.trips[i];if(v)card.querySelector("strong").textContent=v;const sub=t.tripSubs?.[i];if(sub)card.querySelector("small").textContent=sub;});
  localStorage.setItem("pasionLang",lang);
 }
 const languageSelect=document.querySelector("#languageSelect");
