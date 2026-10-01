@@ -88,7 +88,7 @@ CLOSER:
 Cuando tengas suficiente contexto, resumí de forma humana lo que entendiste y proponé una combinación concreta, como lo haría un asesor.
 Si el turista muestra intención, preguntá naturalmente si quiere que preparemos la solicitud para que el equipo de Pasión Travel Tour arme el presupuesto.
 No cierres demasiado pronto: primero descubrí lo necesario.
-La conversación de contacto también debe ser conversacional: si necesitás nombre, WhatsApp o email, pedilos dentro del diálogo, uno por vez, explicando brevemente para qué los necesitás.
+La conversación de contacto también debe ser conversacional: cuando haya intención de cotizar, pedí primero el nombre si falta y después el WhatsApp. El email es opcional y solo pedilo si aporta valor. Extraé los datos de contacto que el turista ya haya escrito y no los vuelvas a pedir. Cuando ya tengas nombre y WhatsApp, contact_ready debe ser true.
 
 SALIDA:
 Devolvé exclusivamente JSON válido según el esquema indicado. "reply" contiene el mensaje que verá el turista. "proposal_ready" solo debe ser true cuando ya haya suficiente contexto para preparar una solicitud. "missing_fields" contiene solo datos realmente necesarios que todavía falten. "experiences" son ideas, no reservas. "intent_level" debe ser EXPLORACIÓN, INTERÉS, ALTA INTENCIÓN o SOLICITUD DE COTIZACIÓN.
@@ -130,9 +130,19 @@ const responseSchema = {
     intent_level: { type: "STRING", enum: ["EXPLORACIÓN","INTERÉS","ALTA INTENCIÓN","SOLICITUD DE COTIZACIÓN"] },
     stage: { type: "STRING", enum: ["DISCOVERY","RECOMMENDATION","PROPOSAL","CONTACT"] },
     summary: { type: "STRING" },
-    experiences: { type: "ARRAY", items: { type: "STRING" } }
+    experiences: { type: "ARRAY", items: { type: "STRING" } },
+    contact: {
+      type: "OBJECT",
+      properties: {
+        name: { type: "STRING" },
+        whatsapp: { type: "STRING" },
+        email: { type: "STRING" }
+      },
+      required: ["name","whatsapp","email"]
+    },
+    contact_ready: { type: "BOOLEAN" }
   },
-  required: ["reply","profile","missing_fields","proposal_ready","intent_level","stage","summary","experiences"]
+  required: ["reply","profile","missing_fields","proposal_ready","intent_level","stage","summary","experiences","contact","contact_ready"]
 };
 
 function cleanHistory(history: unknown) {
@@ -308,9 +318,19 @@ Deno.serve(async (req) => {
     return json({ error: "Gemini devolvió una respuesta no estructurada." }, 502);
   }
 
+  const rawContact = output.contact && typeof output.contact === "object" ? output.contact as Record<string, unknown> : {};
+  const contact = {
+    name: safeText(rawContact.name, 120),
+    whatsapp: safeText(rawContact.whatsapp, 80),
+    email: safeText(rawContact.email, 160)
+  };
+  const contactReady = Boolean(contact.name && contact.whatsapp);
+
   return json({
     ok: true,
     model: MODEL,
-    ...output
+    ...output,
+    contact,
+    contact_ready: contactReady
   });
 });
