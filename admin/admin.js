@@ -85,12 +85,28 @@ previewBtn?.addEventListener("click",()=>{currentUser={id:"preview-user",email:"
 loginForm?.addEventListener("submit",async e=>{e.preventDefault();if(!client){setLoginMessage("Supabase no está configurado.");return}setLoginMessage("Ingresando…");const {error}=await client.auth.signInWithPassword({email:$("#email").value.trim(),password:$("#password").value});if(error)setLoginMessage(error.message);});
 logoutBtn?.addEventListener("click",async()=>{if(client)await client.auth.signOut();showLogin()});
 async function boot(){
- modeBadge.textContent="ADMIN · SIN LOGIN";
  client=window.supabase&&SUPABASE_URL&&SUPABASE_ANON_KEY?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
- currentUser={id:"public-admin",email:"administracion"};
- currentProfile={id:"public-admin",full_name:"Administración",role:"admin"};
+ if(PREVIEW_MODE){currentUser={id:"preview-user",email:"modo-desarrollo"};currentProfile={id:"preview-user",full_name:"Administrador demo",role:"admin"};showApp();showDashboard();return}
+ if(!client){showLogin();setLoginMessage("Supabase no está configurado.");return}
+ showLogin();
+ const {data:{session}}=await client.auth.getSession();
+ if(session) await establishSession(session);
+ client.auth.onAuthStateChange(async (_event,nextSession)=>{
+   if(nextSession) await establishSession(nextSession);
+   else {currentUser=null;currentProfile=null;showLogin();modeBadge.textContent="ADMIN · SIN LOGIN"}
+ });
+}
+async function establishSession(session){
+ currentUser=session.user;
+ const {data,error}=await client.from("profiles").select("*").eq("id",currentUser.id).single();
+ if(error||!data||![...ROLES].includes(data.role)){
+   setLoginMessage("La cuenta existe, pero no tiene un perfil staff válido.");
+   await client.auth.signOut();
+   return;
+ }
+ currentProfile=data;
+ modeBadge.textContent="ADMIN · "+String(data.role).toUpperCase();
  showApp();
  showDashboard();
 }
-async function establishSession(session){currentUser=session.user;const {data,error}=await client.from("profiles").select("*").eq("id",currentUser.id).single();if(error||!data){setLoginMessage("La cuenta existe, pero no tiene un perfil staff válido.");await client.auth.signOut();return}currentProfile=data;showApp();showDashboard()}
 boot();
