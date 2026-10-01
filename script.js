@@ -84,7 +84,19 @@ async function saveLead(payload){
 }
 
 const form=document.querySelector("#quoteForm");
-if(form){form.addEventListener("submit",async e=>{
+if(form){
+ const adultsInput=form.querySelector('[name="adults"]');
+ const minorsInput=form.querySelector('[name="minors"]');
+ const travelersInput=form.querySelector('[name="travelers"]');
+ const syncTravelers=()=>{
+  const adults=Math.max(0,Number.parseInt(adultsInput?.value||"0",10)||0);
+  const minors=Math.max(0,Number.parseInt(minorsInput?.value||"0",10)||0);
+  if(travelersInput)travelersInput.value=String(adults+minors);
+ };
+ adultsInput?.addEventListener("input",syncTravelers);
+ minorsInput?.addEventListener("input",syncTravelers);
+ syncTravelers();
+ form.addEventListener("submit",async e=>{
  e.preventDefault();
  const button=form.querySelector("button[type=submit]");
  if(button)button.disabled=true;
