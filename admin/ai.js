@@ -1,4 +1,4 @@
-const AI_PREVIEW=window.PASION_ADMIN_PREVIEW===true;
+const AI_PREVIEW=window.PASION_AI_PREVIEW===true;
 const AI_URL=window.PASION_AI_FUNCTION_URL||"";
 const aiInput=document.querySelector("#aiPrompt");
 const aiOutput=document.querySelector("#aiOutput");
