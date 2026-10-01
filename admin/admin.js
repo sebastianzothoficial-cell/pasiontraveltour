@@ -109,16 +109,15 @@ async function updateLeadStatus(id,status){
  renderLeads();
 }
 async function boot(){
- if(!window.supabase){message("No se pudo cargar el sistema de autenticación.");return}
- if(!SUPABASE_URL||!SUPABASE_ANON_KEY){
-  message("Falta configurar Supabase para activar el login seguro.");
-  loginForm.querySelector("button").disabled=true;
-  return;
- }
- client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
- const {data}=await client.auth.getSession();
- if(data.session)showDashboard(data.session.user);
- client.auth.onAuthStateChange((_event,session)=>session?showDashboard(session.user):showLogin());
+ // Modo temporal sin login. Los datos reales siguen protegidos por RLS.
+ loginView.classList.add("hidden");
+ dashboardView.classList.remove("hidden");
+ currentUser=null;
+ userEmail.textContent="MODO DESARROLLO";
+ allLeads=[];
+ renderSummary();
+ leadsBody.innerHTML='<tr><td colspan="6">Panel abierto temporalmente. Los leads reales requieren autenticación.</td></tr>';
+ adminMsg("Modo desarrollo sin login. Los datos reales permanecen protegidos.");
 }
 loginForm.addEventListener("submit",async e=>{
  e.preventDefault();message("");
@@ -128,7 +127,7 @@ loginForm.addEventListener("submit",async e=>{
  const {error}=await client.auth.signInWithPassword({email,password});
  if(error)message("No se pudo iniciar sesión. Verificá email y contraseña.");
 });
-logoutBtn.addEventListener("click",async()=>{if(client)await client.auth.signOut();showLogin();});
+logoutBtn.addEventListener("click",()=>{window.location.href="../";});
 refreshBtn.addEventListener("click",loadDashboard);
 [statusFilter,languageFilter,destinationFilter,tripTypeFilter].forEach(el=>el.addEventListener("input",renderLeads));
 boot();
