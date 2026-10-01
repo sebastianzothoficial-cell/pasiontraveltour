@@ -115,29 +115,35 @@
 </section>
 
 <section class="agent-entry" id="pasion-ai">
-  <div class="agent-entry-card">
-    <div class="agent-entry-copy">
-      <p class="eyebrow">PASIÓN TRAVEL TOUR · ASESOR IA</p>
-      <h2>¿Qué Buenos Aires querés vivir?</h2>
-      <p>Contanos qué estás buscando y nuestro asesor de viajes te ayuda a armar una experiencia a tu medida.</p>
+  <div class="agent-orb-hero" data-open-travel-agent>
+    <div class="agent-orb agent-orb-large"><span>✈</span></div>
+    <div class="agent-orb-copy">
+      <p class="eyebrow">PASIÓN TRAVEL TOUR · TOUR MANAGER</p>
+      <h2>Hablá con tu Tour Manager.</h2>
+      <p>Sin formularios. Contale qué querés vivir en Buenos Aires y armamos la experiencia conversando.</p>
+      <button class="button gold" type="button">Hablar con el Tour Manager <span>›</span></button>
     </div>
-    <a href="#pasion-ai" class="button gold" data-open-travel-agent>Hablar con nuestro asesor <span>›</span></a>
   </div>
 </section>
 
 <div class="agent-modal" id="travelAgentModal" aria-hidden="true">
-  <div class="agent-panel" role="dialog" aria-modal="true" aria-labelledby="agentTitle">
+  <div class="agent-orb-stage" role="dialog" aria-modal="true" aria-labelledby="agentTitle">
     <header class="agent-head">
-      <div class="agent-brand"><div class="agent-avatar">✈</div><div><strong id="agentTitle">Pasión Travel Tour</strong><small>Asesor de viajes · Buenos Aires</small></div></div>
-      <button class="agent-close" id="agentClose" type="button" aria-label="Cerrar">Cerrar</button>
+      <div class="agent-brand"><div class="agent-avatar">✈</div><div><strong id="agentTitle">Pasión Travel Tour</strong><small>Tour Manager · Buenos Aires</small></div></div>
+      <button class="agent-close" id="agentClose" type="button" aria-label="Cerrar">×</button>
     </header>
-    <div class="agent-messages" id="agentMessages"></div>
-    <div class="agent-composer">
-      <form class="agent-form" id="agentForm"><textarea id="agentInput" placeholder="Contame qué estás buscando…" aria-label="Mensaje"></textarea><button id="agentVoice" type="button" aria-label="Hablar con el Tour Manager" title="Hablar">🎙️</button><button id="agentSend" type="submit">Enviar</button></form>
+    <div class="agent-orb-content">
+      <button class="agent-orb" id="agentOrb" type="button" aria-label="Hablar con el Tour Manager">
+        <span class="agent-orb-ring"></span><span class="agent-orb-core">✈</span>
+      </button>
+      <div class="agent-status" id="agentStatus">Estoy acá. Hablame.</div>
+      <div class="agent-transcript" id="agentMessages" aria-live="polite"></div>
+      <button class="agent-text-fallback" id="agentTextFallback" type="button">Escribir en vez de hablar</button>
+      <form class="agent-form agent-hidden-form" id="agentForm"><textarea id="agentInput" aria-label="Mensaje"></textarea><button id="agentSend" type="submit">Enviar</button></form>
     </div>
   </div>
 </div>
-<button class="agent-float" type="button" data-open-travel-agent>✈ ¿Qué Buenos Aires querés vivir?</button>
+<button class="agent-float agent-orb-float" type="button" data-open-travel-agent aria-label="Hablar con el Tour Manager"><span>✈</span></button>
 
 <section class="brazil-section">
   <div>
