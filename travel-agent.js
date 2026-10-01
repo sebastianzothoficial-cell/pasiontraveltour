@@ -21,6 +21,7 @@
       const l=lang();
       addMessage("agent", l==="pt" ? "Olá! 👋 Sou o Tour Manager da Pasión Travel Tour. Como você está? Quando você pretende vir a Buenos Aires?" : "¡Hola! 👋 Soy el Tour Manager de Pasión Travel Tour. ¿Cómo estás? ¿Cuándo pensás venir a Buenos Aires?");
     }
+  }
   function closeAgent(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("agent-lock");}
   async function sendMessage(text){
     text=String(text||"").trim(); if(!text||send.disabled)return;
