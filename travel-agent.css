@@ -18,3 +18,8 @@
 @media(max-width:700px){.agent-entry{padding:0 16px}.agent-entry-card{padding:24px;display:block}.agent-entry-card .button{margin-top:18px;width:100%}.agent-float{right:14px;bottom:14px}.agent-modal{padding:0}.agent-panel{height:100vh;border-radius:0;border:0}.agent-messages{padding:16px}.agent-msg{max-width:90%}.agent-contact-grid{grid-template-columns:1fr}.agent-composer{padding:10px}.agent-form textarea{font-size:16px}.agent-form button{padding-inline:14px}}
 
 .agent-lock{overflow:hidden}
+
+.agent-form button#agentVoice{min-width:52px;font-size:20px}
+.agent-listening .agent-form button#agentVoice{box-shadow:0 0 0 4px #b88a4244}
+.agent-speaking .agent-avatar{animation:agent-pulse 1.2s ease-in-out infinite}
+@keyframes agent-pulse{50%{transform:scale(1.08)}}
