@@ -284,10 +284,22 @@ Deno.serve(async (req) => {
 
   const contents = [...history, { role: "user", parts: [{ text: promptContext }] }];
 
-  async function callGemini(generationConfig: Record<string, unknown>) {
+  async function callGemini() {
     try {
+      const transcript = history.map((m) => (m.role === "model" ? "TOUR MANAGER: " : "TURISTA: ") + m.parts.map((p) => p.text || "").join("")).join("\n");
+      const input = [
+        "CONTEXTO DEL PERFIL:",
+        JSON.stringify(profile),
+        "",
+        "HISTORIAL:",
+        transcript || "(sin historial previo)",
+        "",
+        "ÚLTIMO MENSAJE DEL TURISTA:",
+        message
+      ].join("\n");
+
       const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(MODEL) + ":generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/interactions",
         {
           method: "POST",
           headers: {
@@ -295,9 +307,15 @@ Deno.serve(async (req) => {
             "x-goog-api-key": GEMINI_API_KEY
           },
           body: JSON.stringify({
-            system_instruction: { parts: [{ text: systemInstruction }] },
-            contents,
-            generationConfig
+            model: MODEL,
+            input,
+            system_instruction: systemInstruction,
+            generation_config: { max_output_tokens: 1600 },
+            response_format: {
+              type: "text",
+              mime_type: "application/json",
+              schema: responseSchema
+            }
           })
         }
       );
@@ -311,23 +329,45 @@ Deno.serve(async (req) => {
     }
   }
 
-  let geminiResult = await callGemini({
-    maxOutputTokens: 2200,
-    responseMimeType: "application/json",
-    responseSchema
-  });
+  let geminiResult = await callGemini();
 
   if (!geminiResult.response?.ok) {
-    geminiResult = await callGemini({
-        maxOutputTokens: 1800,
-      responseMimeType: "application/json"
-    });
-  }
-
-  if (!geminiResult.response?.ok) {
-    geminiResult = await callGemini({
-        maxOutputTokens: 1200
-    });
+    try {
+      const transcript = history.map((m) => (m.role === "model" ? "TOUR MANAGER: " : "TURISTA: ") + m.parts.map((p) => p.text || "").join("")).join("\n");
+      const input = [
+        "CONTEXTO DEL PERFIL:",
+        JSON.stringify(profile),
+        "",
+        "HISTORIAL:",
+        transcript || "(sin historial previo)",
+        "",
+        "ÚLTIMO MENSAJE DEL TURISTA:",
+        message
+      ].join("\n");
+      const response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/interactions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": GEMINI_API_KEY
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            input,
+            system_instruction: systemInstruction,
+            generation_config: { max_output_tokens: 1200 }
+          })
+        }
+      );
+      const data = await response.json().catch(() => ({}));
+      geminiResult = { response, data };
+    } catch (error) {
+      geminiResult = {
+        response: null,
+        data: { error: { message: error instanceof Error ? error.message : "No se pudo conectar con Gemini." } }
+      };
+    }
   }
 
   if (!geminiResult.response?.ok) {
