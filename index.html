@@ -12,6 +12,7 @@
   <meta property="og:description" content="Tango, fútbol, gastronomía, romance y experiencias a medida. Decinos qué querés vivir y armamos tu viaje.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1743364887606-1d4d13ba9b60?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=80&w=1800">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="travel-agent.css">
 </head>
 <body>
 <div class="site-shell">
@@ -44,7 +45,7 @@
     <div class="gold-line"></div>
     <p class="hero-copy" data-i18n="hero.copy">Tango, fútbol, gastronomía, experiencias románticas, familia y mucho más. Decinos qué querés vivir y armamos el viaje.</p>
     <div class="hero-actions">
-      <a class="button gold" href="#tipo-viaje" data-i18n="hero.cta">✈ &nbsp; Quiero armar mi viaje <span>›</span></a>
+      <a class="button gold" href="#pasion-ai" data-i18n="hero.cta" data-open-travel-agent>✈ &nbsp; Quiero armar mi viaje <span>›</span></a>
       <a class="button glass" data-wa="start">WhatsApp</a>
     </div>
   </div>
@@ -74,7 +75,7 @@
     <p class="eyebrow" data-i18n="visual.eyebrow">BUENOS AIRES NO SE VISITA</p>
     <h2 data-i18n="visual.title">Se vive.</h2>
     <p data-i18n="visual.copy">Una noche de tango. Un asado. Un partido. Una caminata por San Telmo. Un brindis con vino argentino. Elegí el momento y nosotros armamos el resto.</p>
-    <a class="button gold" href="#tipo-viaje" data-i18n="visual.cta">Elegir mi experiencia <span>›</span></a>
+    <a class="button gold" href="#pasion-ai" data-i18n="visual.cta" data-open-travel-agent>Elegir mi experiencia <span>›</span></a>
   </div>
 </section>
 
@@ -112,6 +113,31 @@
     <a href="https://wa.me/5548996752532?text=Hola%20Pasión%20Travel%20Tour%2C%20quiero%20armar%20algo%20diferente%20en%20Buenos%20Aires." class="trip-card"><span>✨</span><strong>Quiero algo diferente</strong><small data-i18n="trip.9">Contanos qué tenés en mente.</small></a>
   </div>
 </section>
+
+<section class="agent-entry" id="pasion-ai">
+  <div class="agent-entry-card">
+    <div class="agent-entry-copy">
+      <p class="eyebrow">PASIÓN TRAVEL TOUR · ASESOR IA</p>
+      <h2>¿Qué Buenos Aires querés vivir?</h2>
+      <p>Contanos qué estás buscando y nuestro asesor de viajes te ayuda a armar una experiencia a tu medida.</p>
+    </div>
+    <a href="#pasion-ai" class="button gold" data-open-travel-agent>Hablar con nuestro asesor <span>›</span></a>
+  </div>
+</section>
+
+<div class="agent-modal" id="travelAgentModal" aria-hidden="true">
+  <div class="agent-panel" role="dialog" aria-modal="true" aria-labelledby="agentTitle">
+    <header class="agent-head">
+      <div class="agent-brand"><div class="agent-avatar">✈</div><div><strong id="agentTitle">Pasión Travel Tour</strong><small>Asesor de viajes · Buenos Aires</small></div></div>
+      <button class="agent-close" id="agentClose" type="button" aria-label="Cerrar">Cerrar</button>
+    </header>
+    <div class="agent-messages" id="agentMessages"></div>
+    <div class="agent-composer">
+      <form class="agent-form" id="agentForm"><textarea id="agentInput" placeholder="Contame qué estás buscando…" aria-label="Mensaje"></textarea><button id="agentSend" type="submit">Enviar</button></form>
+    </div>
+  </div>
+</div>
+<button class="agent-float" type="button" data-open-travel-agent>✈ ¿Qué Buenos Aires querés vivir?</button>
 
 <section class="brazil-section">
   <div>
@@ -173,5 +199,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="script.js"></script>
+<script src="travel-agent.js"></script>
 </body>
 </html>
