@@ -1,7 +1,6 @@
 const AI_PREVIEW=window.PASION_ADMIN_PREVIEW===true;
 const AI_URL=window.PASION_AI_FUNCTION_URL||"";
 const AI_SUPABASE_URL=window.PASION_SUPABASE_URL||"";
-const AI_KEY=window.PASION_SUPABASE_ANON_KEY||"";
 const aiInput=document.querySelector("#aiPrompt");
 const aiOutput=document.querySelector("#aiOutput");
 const aiRun=document.querySelector("#aiRun");
@@ -23,10 +22,7 @@ async function runAI(mode="analyze"){
    aiRender(preview);return;
   }
   if(!AI_URL)throw new Error("La función Gemini todavía no está configurada.");
-  const {data:sessionData}=await window.supabase.createClient(AI_SUPABASE_URL,AI_KEY).auth.getSession();
-  const token=sessionData?.session?.access_token;
-  if(!token)throw new Error("Sesión Auth requerida.");
-  const res=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify({mode,prompt})});
+  const res=await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode,prompt})});
   const data=await res.json();
   if(!res.ok)throw new Error(data?.error||"Error de Gemini");
   aiRender(data.output||data.text||JSON.stringify(data,null,2));
