@@ -37,8 +37,8 @@
     text=String(text||"").trim();if(!text||send.disabled)return;
     addMessage("user",text);state.history.push({role:"user",text});input.value="";send.disabled=true;addTyping(true);setStatus(lang()==="pt"?"Pensando…":lang()==="en"?"Thinking…":"Pensando…");
     try{
-      const res=await fetch(cfg,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"chat",sessionId:state.sessionId,message:text,history:state.history.slice(-20),profile:state.profile})});
-      const data=await res.json();if(!res.ok)throw new Error(data?.error||"Gemini no pudo responder.");
+      const res=await fetch(cfg,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.PASION_SUPABASE_ANON_KEY||""},body:JSON.stringify({action:"chat",sessionId:state.sessionId,message:text,history:state.history.slice(-20),profile:state.profile})});
+      const data=await res.json();if(!res.ok)throw new Error(data?.provider_error||data?.detail||data?.error||"Gemini no pudo responder.");
       addTyping(false);state.profile=data.profile||state.profile;state.intentLevel=data.intent_level||state.intentLevel;state.summary=data.summary||state.summary;
       const reply=data.reply||"Contame un poco más y seguimos.";addMessage("agent",reply);state.history.push({role:"assistant",text:reply});
       setStatus(lang()==="pt"?"":lang()==="en"?"":"");
