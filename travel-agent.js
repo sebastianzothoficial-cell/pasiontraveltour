@@ -15,19 +15,12 @@
     else el?.remove();
     messages.scrollTop=messages.scrollHeight;
   }
-  function chips(items){
-    const wrap=document.createElement("div"); wrap.className="agent-chips";
-    items.forEach(item=>{const b=document.createElement("button");b.className="agent-chip";b.type="button";b.textContent=item;b.addEventListener("click",()=>{sendMessage(item)});wrap.appendChild(b);});
-    messages.appendChild(wrap);messages.scrollTop=messages.scrollHeight;
-  }
   function openAgent(){
     modal.classList.add("open"); modal.setAttribute("aria-hidden","false"); document.body.classList.add("agent-lock"); input.focus();
     if(!messages.children.length){
       const l=lang();
-      addMessage("agent", l==="pt" ? "Olá 👋 Sou o consultor de viagens da Pasión Travel Tour. Estou aqui para ajudar você a montar sua experiência em Buenos Aires. Não precisa saber exatamente o que quer fazer. Me conte como é a sua viagem e eu vou fazendo algumas perguntas." : l==="en" ? "Hi 👋 I'm the Pasión Travel Tour travel advisor. I'm here to help you build your Buenos Aires experience. You don't need to know exactly what you want to do. Tell me about your trip and I'll guide you with a few questions." : "Hola 👋 Soy el asesor de viajes de Pasión Travel Tour. Estoy para ayudarte a organizar tu experiencia en Buenos Aires. No necesitás saber exactamente qué querés hacer. Contame cómo es tu viaje y te voy haciendo algunas preguntas.");
-      chips(l==="pt"?["Casal","Família","Futebol","Tango","Gastronomia","Quero contar minha ideia"]:["Pareja","Familia","Fútbol","Tango","Gastronomía","Quiero contarte mi idea"]);
+      addMessage("agent", l==="pt" ? "Olá! 👋 Sou o Tour Manager da Pasión Travel Tour. Como você está? Quando você pretende vir a Buenos Aires?" : "¡Hola! 👋 Soy el Tour Manager de Pasión Travel Tour. ¿Cómo estás? ¿Cuándo pensás venir a Buenos Aires?");
     }
-  }
   function closeAgent(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.classList.remove("agent-lock");}
   async function sendMessage(text){
     text=String(text||"").trim(); if(!text||send.disabled)return;
@@ -44,7 +37,7 @@
       if(data.proposal_ready){
         renderSummary(data);
       } else if(Array.isArray(data.missing_fields)&&data.missing_fields.length===0){
-        chips(lang()==="pt"?["Preparar proposta","Quero mudar algo"]:["Preparar propuesta","Quiero cambiar algo"]);
+  
       }
       messages.scrollTop=messages.scrollHeight;
     }catch(e){addTyping(false);addMessage("agent","No pude conectar con el asesor en este momento. Podés intentar nuevamente.");console.error(e);}
@@ -79,6 +72,7 @@
     }catch(e){$("#agentConfirm").disabled=false;alert(e.message||"No se pudo guardar la solicitud.");}
   }
   document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>openAgent(),900);
     document.querySelectorAll("[data-open-travel-agent]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();openAgent();}));
     $("#agentClose")?.addEventListener("click",closeAgent);
     $("#agentForm")?.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value);});
