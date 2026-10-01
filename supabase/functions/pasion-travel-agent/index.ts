@@ -387,7 +387,7 @@ Deno.serve(async (req) => {
   }
 
   const gemini = geminiResult.data;
-  const raw = gemini?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("").trim();
+  const raw = typeof gemini?.output_text === "string" ? gemini.output_text.trim() : Array.isArray(gemini?.steps) ? gemini.steps.flatMap((step: { type?: string; content?: Array<{ type?: string; text?: string }> }) => step?.type === "model_output" && Array.isArray(step?.content) ? step.content.map((part) => part?.text || "") : []).join("").trim() : "";
   if (!raw) {
     return json({ error: "Gemini no devolvió una respuesta utilizable.", model: MODEL }, 502);
   }
