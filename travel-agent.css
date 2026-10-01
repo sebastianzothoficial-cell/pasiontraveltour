@@ -1,25 +1,24 @@
-/* Pasión Travel Tour · AI Travel Agent */
+/* Pasión Travel Tour · Conversational AI Orb */
 .agent-entry{margin:28px auto 0;max-width:1180px;padding:0 42px}
-.agent-entry-card{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:30px 34px;border:1px solid #5b4a2f;border-radius:20px;background:linear-gradient(120deg,#17130d,#0d1014)}
-.agent-entry-copy{max-width:720px}.agent-entry-copy .eyebrow{margin:0 0 8px}.agent-entry-copy h2{font:600 clamp(32px,4vw,52px)/1 'Playfair Display',serif;margin:0 0 10px}.agent-entry-copy p{margin:0;color:#c6c2ba}
-.agent-float{position:fixed;right:22px;bottom:22px;z-index:90;border:1px solid #c8a15b;background:#b88a42;color:#0b0d11;border-radius:999px;padding:15px 20px;font-weight:800;box-shadow:0 12px 35px #0008;cursor:pointer}
-.agent-modal{position:fixed;inset:0;z-index:1000;background:#050608e8;display:none;align-items:center;justify-content:center;padding:18px}
-.agent-modal.open{display:flex}.agent-panel{width:min(980px,100%);height:min(780px,94vh);background:#0c0f13;border:1px solid #3c3427;border-radius:24px;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;box-shadow:0 30px 80px #000b}
-.agent-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #ffffff14;background:#11151a}
+.agent-orb-hero{min-height:330px;padding:36px;display:flex;align-items:center;justify-content:center;gap:56px;border:1px solid #5b4a2f;border-radius:28px;background:radial-gradient(circle at 30% 45%,#332714 0,#17130d 32%,#0d1014 72%);cursor:pointer;overflow:hidden}
+.agent-orb-copy{max-width:560px}.agent-orb-copy .eyebrow{margin:0 0 8px}.agent-orb-copy h2{font:600 clamp(32px,4vw,52px)/1 'Playfair Display',serif;margin:0 0 12px}.agent-orb-copy p{margin:0;color:#c6c2ba;font-size:18px;line-height:1.55}
+.agent-orb-hero .button{margin-top:20px}
+.agent-float{position:fixed;right:24px;bottom:24px;z-index:90;cursor:pointer}
+.agent-orb-float{width:74px;height:74px;border-radius:50%;border:1px solid #d7b36d;background:radial-gradient(circle at 35% 30%,#f0d18e,#b88a42 55%,#76501f);color:#090a0d;font-size:27px;box-shadow:0 0 0 8px #b88a4220,0 18px 50px #000b}
+.agent-orb-float span{display:block}
+.agent-modal{position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at 50% 42%,#211b10e8 0,#050608f4 55%,#020304fa 100%);display:none;align-items:center;justify-content:center;padding:18px}
+.agent-modal.open{display:flex}
+.agent-orb-stage{width:min(980px,100%);height:min(820px,94vh);background:rgba(9,11,14,.86);border:1px solid #3c3427;border-radius:28px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 30px 100px #000c;backdrop-filter:blur(18px)}
+.agent-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #ffffff14;background:#11151acc}
 .agent-brand{display:flex;align-items:center;gap:12px}.agent-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#b88a42;color:#0b0d11;font-weight:900}.agent-head strong{display:block}.agent-head small{display:block;color:#8f8c86;margin-top:2px}
-.agent-close{background:transparent;border:1px solid #ffffff22;color:#fff;border-radius:10px;padding:9px 12px;cursor:pointer}
-.agent-messages{padding:22px;overflow:auto;display:flex;flex-direction:column;gap:12px}
-.agent-msg{max-width:82%;padding:13px 15px;border-radius:16px;line-height:1.5;white-space:pre-wrap}.agent-msg.agent{align-self:flex-start;background:#171b21;border:1px solid #ffffff12}.agent-msg.user{align-self:flex-end;background:#b88a42;color:#090a0d}.agent-typing{color:#9d978d;font-size:13px;padding:4px 2px}
-.agent-chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px}.agent-chip{border:1px solid #5a4a32;background:#12161b;color:#eee9e0;border-radius:999px;padding:9px 12px;cursor:pointer}.agent-chip:hover{border-color:#b88a42}
-.agent-proposal{margin:4px 0;padding:18px;border:1px solid #6a5533;border-radius:16px;background:linear-gradient(135deg,#17130d,#11151a)}.agent-proposal h3{margin:0 0 10px;font:600 24px 'Playfair Display',serif}.agent-proposal ul{margin:8px 0 0;padding-left:20px;color:#d7d1c7}
-.agent-composer{padding:14px 18px;border-top:1px solid #ffffff14;background:#0f1216}.agent-form{display:flex;gap:10px}.agent-form textarea{flex:1;resize:none;min-height:48px;max-height:120px;background:#080a0e;color:#fff;border:1px solid #383b41;border-radius:14px;padding:13px}.agent-form button,.agent-primary{border:0;border-radius:14px;padding:12px 16px;background:#b88a42;color:#0b0d11;font-weight:800;cursor:pointer}.agent-form button:disabled{opacity:.5;cursor:wait}
-.agent-contact{padding:18px;border:1px solid #ffffff14;border-radius:16px;background:#11151a}.agent-contact h3{margin:0 0 8px}.agent-contact p{color:#a9a49b;margin:0 0 14px}.agent-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.agent-contact input{width:100%;box-sizing:border-box;background:#080a0e;color:#fff;border:1px solid #383b41;border-radius:10px;padding:12px}.agent-contact-actions{display:flex;gap:10px;margin-top:12px}.agent-secondary{border:1px solid #ffffff22;background:transparent;color:#fff;border-radius:12px;padding:11px 14px;cursor:pointer}
-.agent-success{padding:20px;border:1px solid #5d7c52;border-radius:16px;background:#111811}.agent-success h3{margin-top:0}
-@media(max-width:700px){.agent-entry{padding:0 16px}.agent-entry-card{padding:24px;display:block}.agent-entry-card .button{margin-top:18px;width:100%}.agent-float{right:14px;bottom:14px}.agent-modal{padding:0}.agent-panel{height:100vh;border-radius:0;border:0}.agent-messages{padding:16px}.agent-msg{max-width:90%}.agent-contact-grid{grid-template-columns:1fr}.agent-composer{padding:10px}.agent-form textarea{font-size:16px}.agent-form button{padding-inline:14px}}
-
+.agent-close{background:transparent;border:1px solid #ffffff22;color:#fff;border-radius:50%;width:38px;height:38px;font-size:24px;cursor:pointer}
+.agent-orb-content{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:30px}
+.agent-orb{position:relative;width:230px;height:230px;border:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f2d796 0,#c49a51 28%,#8b6129 62%,#3b2813 100%);color:#0b0d11;cursor:pointer;box-shadow:0 0 0 14px #b88a4214,0 0 70px #b88a4266,0 30px 90px #000c}
+.agent-orb::before{content:"";position:absolute;inset:-22px;border-radius:50%;border:1px solid #c8a15b55;animation:orb-breathe 3s ease-in-out infinite}
+.agent-orb-core{font-size:64px;position:relative;z-index:2}.agent-orb-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid #f0d18e44}
+.agent-status{min-height:25px;color:#e5ded1;font-size:17px;text-align:center}.agent-transcript{width:min(680px,92%);max-height:180px;overflow:auto;display:flex;flex-direction:column;gap:8px;text-align:center}.agent-msg{padding:8px 12px;line-height:1.45}.agent-msg.user{color:#c7a15e}.agent-msg.agent{color:#eee9e0}.agent-typing{color:#9d978d}.agent-proposal{color:#c7a15e;font-size:13px}.agent-success{padding:14px 18px;border:1px solid #5d7c52;border-radius:14px;color:#e8eee4}.agent-primary{margin-left:12px;border:0;border-radius:10px;padding:9px 14px;background:#b88a42;color:#0b0d11;font-weight:800;cursor:pointer}
+.agent-text-fallback{border:0;background:transparent;color:#8f8c86;text-decoration:underline;cursor:pointer}.agent-hidden-form{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.agent-speaking .agent-orb{animation:orb-speaking 1.15s ease-in-out infinite}.agent-listening .agent-orb{animation:orb-listening .9s ease-in-out infinite;box-shadow:0 0 0 20px #b88a4230,0 0 100px #b88a4299,0 30px 90px #000c}.agent-listening .agent-status{color:#e8c878}
+@keyframes orb-breathe{50%{transform:scale(1.035);opacity:.7}}@keyframes orb-speaking{50%{transform:scale(1.06)}}@keyframes orb-listening{50%{transform:scale(1.1)}}
+@media(max-width:700px){.agent-entry{padding:0 16px}.agent-orb-hero{min-height:440px;padding:24px;display:flex;flex-direction:column;gap:24px;text-align:center}.agent-orb-hero .agent-orb{width:150px;height:150px}.agent-orb-hero .agent-orb-core{font-size:42px}.agent-float{right:14px;bottom:14px}.agent-orb-float{width:64px;height:64px}.agent-modal{padding:0}.agent-orb-stage{height:100vh;border-radius:0;border:0}.agent-orb{width:190px;height:190px}.agent-orb-content{padding:20px}.agent-transcript{max-height:140px}}
 .agent-lock{overflow:hidden}
-
-.agent-form button#agentVoice{min-width:52px;font-size:20px}
-.agent-listening .agent-form button#agentVoice{box-shadow:0 0 0 4px #b88a4244}
-.agent-speaking .agent-avatar{animation:agent-pulse 1.2s ease-in-out infinite}
-@keyframes agent-pulse{50%{transform:scale(1.08)}}
