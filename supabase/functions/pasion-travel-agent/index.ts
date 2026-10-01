@@ -95,52 +95,52 @@ Devolvé exclusivamente JSON válido según el esquema indicado. "reply" contien
 `;
 
 const responseSchema = {
-  type: "OBJECT",
+  type: "object",
   properties: {
-    reply: { type: "STRING" },
+    reply: { type: "string" },
     profile: {
-      type: "OBJECT",
+      type: "object",
       properties: {
-        nombre: { type: "STRING" },
-        pais: { type: "STRING" },
-        idioma: { type: "STRING" },
-        cantidad_viajeros: { type: "INTEGER" },
-        adultos: { type: "INTEGER" },
-        menores: { type: "INTEGER" },
-        fechas: { type: "STRING" },
-        duracion: { type: "STRING" },
-        aeropuerto_llegada: { type: "STRING" },
-        aeropuerto_salida: { type: "STRING" },
-        horarios_vuelo: { type: "STRING" },
-        hotel: { type: "STRING" },
-        zona_hotel: { type: "STRING" },
-        motivo_viaje: { type: "STRING" },
-        intereses: { type: "ARRAY", items: { type: "STRING" } },
-        preferencias: { type: "ARRAY", items: { type: "STRING" } },
-        restricciones: { type: "ARRAY", items: { type: "STRING" } },
-        ritmo: { type: "STRING" },
-        presupuesto_aproximado: { type: "STRING" },
-        servicios_solicitados: { type: "ARRAY", items: { type: "STRING" } },
-        observaciones: { type: "STRING" }
+        nombre: { type: "string" },
+        pais: { type: "string" },
+        idioma: { type: "string" },
+        cantidad_viajeros: { type: "integer" },
+        adultos: { type: "integer" },
+        menores: { type: "integer" },
+        fechas: { type: "string" },
+        duracion: { type: "string" },
+        aeropuerto_llegada: { type: "string" },
+        aeropuerto_salida: { type: "string" },
+        horarios_vuelo: { type: "string" },
+        hotel: { type: "string" },
+        zona_hotel: { type: "string" },
+        motivo_viaje: { type: "string" },
+        intereses: { type: "array", items: { type: "string" } },
+        preferencias: { type: "array", items: { type: "string" } },
+        restricciones: { type: "array", items: { type: "string" } },
+        ritmo: { type: "string" },
+        presupuesto_aproximado: { type: "string" },
+        servicios_solicitados: { type: "array", items: { type: "string" } },
+        observaciones: { type: "string" }
       },
       required: ["nombre","pais","idioma","cantidad_viajeros","adultos","menores","fechas","duracion","aeropuerto_llegada","aeropuerto_salida","horarios_vuelo","hotel","zona_hotel","motivo_viaje","intereses","preferencias","restricciones","ritmo","presupuesto_aproximado","servicios_solicitados","observaciones"]
     },
-    missing_fields: { type: "ARRAY", items: { type: "STRING" } },
-    proposal_ready: { type: "BOOLEAN" },
-    intent_level: { type: "STRING", enum: ["EXPLORACIÓN","INTERÉS","ALTA INTENCIÓN","SOLICITUD DE COTIZACIÓN"] },
-    stage: { type: "STRING", enum: ["DISCOVERY","RECOMMENDATION","PROPOSAL","CONTACT"] },
-    summary: { type: "STRING" },
-    experiences: { type: "ARRAY", items: { type: "STRING" } },
+    missing_fields: { type: "array", items: { type: "string" } },
+    proposal_ready: { type: "boolean" },
+    intent_level: { type: "string", enum: ["EXPLORACIÓN","INTERÉS","ALTA INTENCIÓN","SOLICITUD DE COTIZACIÓN"] },
+    stage: { type: "string", enum: ["DISCOVERY","RECOMMENDATION","PROPOSAL","CONTACT"] },
+    summary: { type: "string" },
+    experiences: { type: "array", items: { type: "string" } },
     contact: {
-      type: "OBJECT",
+      type: "object",
       properties: {
-        name: { type: "STRING" },
-        whatsapp: { type: "STRING" },
-        email: { type: "STRING" }
+        name: { type: "string" },
+        whatsapp: { type: "string" },
+        email: { type: "string" }
       },
       required: ["name","whatsapp","email"]
     },
-    contact_ready: { type: "BOOLEAN" }
+    contact_ready: { type: "boolean" }
   },
   required: ["reply","profile","missing_fields","proposal_ready","intent_level","stage","summary","experiences","contact","contact_ready"]
 };
