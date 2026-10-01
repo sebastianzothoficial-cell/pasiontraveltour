@@ -1,6 +1,6 @@
 import { createSupabaseContext } from "npm:@supabase/server@1";
 
-const MODEL = Deno.env.get("GEMINI_TRAVEL_MODEL") || Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+const MODEL = Deno.env.get("GEMINI_TRAVEL_MODEL") || Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -312,7 +312,6 @@ Deno.serve(async (req) => {
   }
 
   let geminiResult = await callGemini({
-    temperature: 0.45,
     maxOutputTokens: 2200,
     responseMimeType: "application/json",
     responseSchema
@@ -320,16 +319,14 @@ Deno.serve(async (req) => {
 
   if (!geminiResult.response?.ok) {
     geminiResult = await callGemini({
-      temperature: 0.45,
-      maxOutputTokens: 1800,
+        maxOutputTokens: 1800,
       responseMimeType: "application/json"
     });
   }
 
   if (!geminiResult.response?.ok) {
     geminiResult = await callGemini({
-      temperature: 0.45,
-      maxOutputTokens: 1200
+        maxOutputTokens: 1200
     });
   }
 
