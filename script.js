@@ -37,7 +37,7 @@ process:{eyebrow:"COMO FUNCIONA",title:"Da sua ideia à viagem.",tell:"Conte par
 seo:{eyebrow:"IDEIAS PARA SUA VIAGEM",title:"Comece pelo que você quer viver.",couples:"Buenos Aires para casais →",families:"Buenos Aires para famílias →",football:"Futebol em Buenos Aires →",tango:"Tango em Buenos Aires →",food:"Gastronomia argentina →",travel:"Viagem para Buenos Aires →"},
 contact:{eyebrow:"VAMOS VIAJAR?",title:"Conte como você imagina sua viagem.",copy:"Conte as datas, quantas pessoas viajam e que experiência procura. Respondemos pelo WhatsApp com uma proposta para sua viagem."},
 form:{name:"Nome",namePh:"Seu nome",destination:"Destino",destinationChoose:"Escolha um destino",custom:"Pacote sob medida",dates:"Datas",datesPh:"Ex.: 10 a 15 de novembro",travelers:"Viajantes",travelersPh:"Ex.: 2 adultos",message:"Mensagem",messagePh:"Datas, número de viajantes e o que você gostaria de fazer...",submit:"Enviar pelo WhatsApp  ›"},
-footer:{tagline:"Sua viagem, nossa paixão."},
+footer:{tagline:"Sua viagem, nossa paixão."},brand:{tag:"SUA VIAGEM, NOSSA PAIXÃO"},destFooter:"ARGENTINA  •  O MUNDO  •  EM UMA SÓ AGÊNCIA",exp:{custom:"Buenos Aires sob medida",customSub:"Roteiros de 24, 48 ou 72 horas e propostas personalizadas.",tango:"Tango & noite portenha",tangoSub:"Jantar, show e experiências de tango no seu estilo.",football:"Futebol argentino",footballSub:"Estádios, bairros, história e paixão pelo futebol.",tigre:"Tigre & Delta",tigreSub:"Navegação, natureza e passeios a partir de Buenos Aires.",food:"Gastronomia & asado",foodSub:"Parrillas, vinhos e experiências gastronômicas.",special:"Momentos especiais",specialSub:"Fotografia, casais, pedidos e comemorações."},
 tripSubs:["Uma viagem para compartilhar.","Momentos especiais para dois.","Planos para aproveitar juntos.","Estádios, história e paixão.","Jantar, show e noite.","Sabores e experiências locais.","Algo único para lembrar.","Toda a viagem, pensada para você.","Conte o que você tem em mente."],trips:["Casal","Escapada romântica","Família","Futebol","Tango e noite portenha","Gastronomia e vinho","Experiências especiais","Viagem completa sob medida","Quero algo diferente"]
 },
 en:{
@@ -73,6 +73,7 @@ function setLanguage(lang){
 document.querySelectorAll("[data-trip-sub]").forEach((el,i)=>{const v=t.tripSubs?.[i];if(v)el.textContent=v;});
  const select=document.querySelector("#languageSelect");if(select)select.value=lang;
  document.querySelectorAll("[data-wa]").forEach(a=>{const k=a.dataset.wa;a.href=whatsappUrl(waMessages[lang]?.[k]||waMessages[lang].start);});
+ document.querySelectorAll(".destination small").forEach(el=>{const v=get(t,"dest.view");if(v)el.textContent=v;});
  const cards=document.querySelectorAll(".trip-card");cards.forEach((card,i)=>{const v=t.trips[i];if(v)card.querySelector("strong").textContent=v;const sub=t.tripSubs?.[i];if(sub)card.querySelector("small").textContent=sub;});
  localStorage.setItem("pasionLang",lang);
 }
