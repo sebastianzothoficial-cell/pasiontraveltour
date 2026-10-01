@@ -87,7 +87,7 @@
         await confirmRequest(data.contact);
       }
       messages.scrollTop=messages.scrollHeight;
-    }catch(e){addTyping(false);addMessage("agent","Estoy teniendo un problema momentáneo con la conexión. Probemos de nuevo.");console.error(e);}
+    }catch(e){addTyping(false);const detail=e?.message||"No se pudo contactar al Tour Manager.";addMessage("agent",detail);speak(detail);console.error(e);}
     finally{send.disabled=false;input.focus();}
   }
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
