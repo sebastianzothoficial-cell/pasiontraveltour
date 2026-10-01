@@ -1,6 +1,6 @@
 import { createSupabaseContext } from "npm:@supabase/server@1";
 
-const MODEL = Deno.env.get("GEMINI_TRAVEL_MODEL") || Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
+const MODEL = "gemini-3.8-flash";
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const cors = {
   "Access-Control-Allow-Origin": "*",
