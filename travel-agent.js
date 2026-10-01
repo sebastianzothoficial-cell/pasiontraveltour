@@ -1,6 +1,6 @@
 (() => {
-  const cfg = window.PASION_SUPABASE_URL ? window.PASION_SUPABASE_URL + "/functions/v1/pasion-travel-agent" : "";
-  const whatsapp = () => String(window.PASION_WHATSAPP_NUMBER || "5548996752532").replace(/\\D/g, "");
+  const cfg = window.PASION_TRAVEL_AGENT_FUNCTION_URL || (window.PASION_SUPABASE_URL ? window.PASION_SUPABASE_URL + "/functions/v1/pasion-travel-agent" : "");
+  const whatsapp = () => String(window.PASION_WHATSAPP_NUMBER || "5548996752532").replace(/\D/g, "");
   const state = { sessionId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()), history: [], profile: {}, intentLevel: "EXPLORACIÓN", summary: "" };
 
   const $ = (s) => document.querySelector(s);
@@ -81,7 +81,7 @@
   document.addEventListener("DOMContentLoaded",()=>{
     document.querySelectorAll("[data-open-travel-agent]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();openAgent();}));
     $("#agentClose")?.addEventListener("click",closeAgent);
-    $("#agentSend")?.addEventListener("click",()=>sendMessage(input.value));
+    $("#agentForm")?.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value);});
     input?.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage(input.value);}});
     modal?.addEventListener("click",e=>{if(e.target===modal)closeAgent();});
     document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal.classList.contains("open"))closeAgent();});
