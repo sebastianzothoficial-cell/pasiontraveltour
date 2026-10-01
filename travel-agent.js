@@ -35,42 +35,29 @@
       if(Array.isArray(data.experiences)&&data.experiences.length){
         const box=document.createElement("div");box.className="agent-proposal";box.innerHTML="<h3>Ideas que podrían encajar</h3><ul>"+data.experiences.slice(0,5).map(x=>"<li>"+escapeHtml(x)+"</li>").join("")+"</ul>";messages.appendChild(box);
       }
-      if(data.proposal_ready){
-        renderSummary(data);
-      } else if(Array.isArray(data.missing_fields)&&data.missing_fields.length===0){
-  
+      if(data.contact_ready&&data.contact){
+        await confirmRequest(data.contact);
       }
       messages.scrollTop=messages.scrollHeight;
     }catch(e){addTyping(false);addMessage("agent","No pude conectar con el asesor en este momento. Podés intentar nuevamente.");console.error(e);}
     finally{send.disabled=false;input.focus();}
   }
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
-  function renderSummary(data){
-    const p=state.profile||{}; const box=document.createElement("div"); box.className="agent-proposal";
-    const items=[["Viajeros",p.cantidad_viajeros||"-"],["Duración",p.duracion||"-"],["Fechas",p.fechas||"-"],["Motivo",p.motivo_viaje||"-"],["Intereses",(p.intereses||[]).join(" / ")||"-"],["Preferencias",(p.preferencias||[]).join(" / ")||"-"]];
-    box.innerHTML="<h3>Así entendí tu viaje</h3><ul>"+items.map(([k,v])=>"<li><b>"+k+":</b> "+escapeHtml(v)+"</li>").join("")+"</ul>";
-    const b=document.createElement("button");b.className="agent-primary";b.type="button";b.textContent=lang()==="pt"?"Preparar proposta":lang()==="en"?"Prepare proposal":"Preparar propuesta";b.addEventListener("click",()=>showContact(box));box.appendChild(b);
-    const edit=document.createElement("button");edit.className="agent-secondary";edit.type="button";edit.textContent=lang()==="pt"?"Quero mudar algo":lang()==="en"?"I want to change something":"Quiero cambiar algo";edit.style.marginLeft="8px";edit.addEventListener("click",()=>input.focus());box.appendChild(edit);
-    messages.appendChild(box);messages.scrollTop=messages.scrollHeight;
-  }
-  function showContact(container){
-    container.remove();
-    const box=document.createElement("div");box.className="agent-contact";
-    const pt=lang()==="pt", en=lang()==="en";
-    box.innerHTML="<h3>"+(pt?"Vamos preparar sua solicitação":en?"Let's prepare your request":"Vamos a preparar tu solicitud")+"</h3><p>"+(pt?"Deixe seus dados para que a equipe da Pasión Travel Tour possa continuar a cotação.":en?"Leave your details so the Pasión Travel Tour team can continue the quote.":"Dejanos tus datos para que el equipo de Pasión Travel Tour continúe la cotización.")+"</p><div class='agent-contact-grid'><input id='agentName' placeholder='"+(pt?"Nome":en?"Name":"Nombre")+"'><input id='agentWhatsApp' placeholder='WhatsApp'><input id='agentEmail' type='email' placeholder='Email'></div><div class='agent-contact-actions'><button class='agent-primary' id='agentConfirm'>"+(pt?"Confirmar solicitação":en?"Confirm request":"Confirmar solicitud")+"</button><button class='agent-secondary' id='agentBack'>"+(pt?"Voltar":en?"Back":"Volver")+"</button></div>";
-    messages.appendChild(box);messages.scrollTop=messages.scrollHeight;
-    $("#agentConfirm").addEventListener("click",()=>confirmRequest(box));$("#agentBack").addEventListener("click",()=>{box.remove();input.focus();});
-  }
-  async function confirmRequest(box){
-    const contact={name:$("#agentName")?.value.trim(),whatsapp:$("#agentWhatsApp")?.value.trim(),email:$("#agentEmail")?.value.trim()};
-    if(!contact.name||!contact.whatsapp){alert(lang()==="pt"?"Informe nome e WhatsApp.":lang()==="en"?"Please enter your name and WhatsApp.":"Completá nombre y WhatsApp.");return;}
-    $("#agentConfirm").disabled=true;
+  async function confirmRequest(contact){
+    const cleanContact={
+      name:String(contact?.name||state.profile?.nombre||"").trim(),
+      whatsapp:String(contact?.whatsapp||"").trim(),
+      email:String(contact?.email||"").trim()
+    };
+    if(!cleanContact.name||!cleanContact.whatsapp)return;
     try{
-      const res=await fetch(cfg,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"confirm",sessionId:state.sessionId,profile:state.profile,contact,history:state.history,summary:state.summary,intentLevel:state.intentLevel})});
+      const res=await fetch(cfg,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"confirm",sessionId:state.sessionId,profile:state.profile,contact:cleanContact,history:state.history,summary:state.summary,intentLevel:state.intentLevel})});
       const data=await res.json();if(!res.ok)throw new Error(data?.error||"No se pudo guardar la solicitud.");
-      box.innerHTML="<div class='agent-success'><h3>"+(lang()==="pt"?"Solicitação criada.":lang()==="en"?"Request created.":"Solicitud creada.")+"</h3><p>"+(lang()==="pt"?"Agora você pode continuar pelo WhatsApp com nossa equipe.":lang()==="en"?"You can now continue on WhatsApp with our team.":"Ahora podés continuar por WhatsApp con nuestro equipo.")+"</p><button class='agent-primary' id='agentWhatsAppGo'>Continuar por WhatsApp</button></div>";
+      const box=document.createElement("div");box.className="agent-success";
+      box.innerHTML="<h3>"+(lang()==="pt"?"Perfeito. Já deixei sua solicitação preparada.":lang()==="en"?"Perfect. I've prepared your request.":"Perfecto. Ya dejé preparada tu solicitud.")+"</h3><p>"+(lang()==="pt"?"Agora você pode continuar pelo WhatsApp com nossa equipe para validar disponibilidade e orçamento.":lang()==="en"?"You can continue on WhatsApp with our team to validate availability and pricing.":"Ahora podés continuar por WhatsApp con nuestro equipo para validar disponibilidad y presupuesto.")+"</p><button class='agent-primary' id='agentWhatsAppGo'>Continuar por WhatsApp</button>";
+      messages.appendChild(box);messages.scrollTop=messages.scrollHeight;
       $("#agentWhatsAppGo").addEventListener("click",()=>window.open("https://wa.me/"+whatsapp()+"?text="+encodeURIComponent(data.whatsappText||""),"_blank","noopener,noreferrer"));
-    }catch(e){$("#agentConfirm").disabled=false;alert(e.message||"No se pudo guardar la solicitud.");}
+    }catch(e){addMessage("agent",lang()==="pt"?"Tive um problema ao registrar sua solicitação. Vamos tentar novamente.":lang()==="en"?"I had a problem registering your request. Let's try again.":"Tuve un problema al registrar tu solicitud. Intentemos nuevamente.");console.error(e);}
   }
   document.addEventListener("DOMContentLoaded",()=>{
     setTimeout(()=>openAgent(),900);
