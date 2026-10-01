@@ -19,6 +19,19 @@ MVP de sitio web para servicios de receptivo en Buenos Aires y Florianópolis.
 4. Configurar Google Search Console y Google Business Profile.
 5. En una segunda etapa, integrar reservas, pagos y proveedores de vuelos/hoteles.
 
+## Panel de control
+
+El backoffice está en `/admin/`.
+
+- Login preparado con **Supabase Auth**.
+- No se guardan contraseñas en el código.
+- `admin/config.example.js` contiene la plantilla de configuración.
+- Para activar el acceso real hay que crear `admin/config.js` con la URL del proyecto y la anon/publishable key de Supabase.
+- La contraseña del administrador se crea y administra desde Supabase Auth.
+- El panel está marcado como `noindex,nofollow` y `/admin/` está excluido de robots.
+
+> Importante: la anon/publishable key puede estar en el frontend; nunca debe publicarse una `service_role` key.
+
 ## Deploy
 
 El sitio es estático y puede publicarse en GitHub Pages, Netlify, Vercel o cualquier hosting estático.
