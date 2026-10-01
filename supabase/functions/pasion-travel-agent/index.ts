@@ -284,40 +284,98 @@ Deno.serve(async (req) => {
 
   const contents = [...history, { role: "user", parts: [{ text: promptContext }] }];
 
-  const geminiResponse = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(MODEL) + ":generateContent",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": GEMINI_API_KEY },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemInstruction }] },
-        contents,
-        tools: [{ google_search: {} }],
-        generationConfig: {
-          temperature: 0.45,
-          maxOutputTokens: 2200,
-          responseMimeType: "application/json",
-          responseSchema
+  async function callGemini(generationConfig: Record<string, unknown>) {
+    try {
+      const response = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(MODEL) + ":generateContent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": GEMINI_API_KEY
+          },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemInstruction }] },
+            contents,
+            generationConfig
+          })
         }
-      })
+      );
+      const data = await response.json().catch(() => ({}));
+      return { response, data };
+    } catch (error) {
+      return {
+        response: null,
+        data: { error: { message: error instanceof Error ? error.message : "No se pudo conectar con Gemini." } }
+      };
     }
-  );
-
-  const gemini = await geminiResponse.json();
-  if (!geminiResponse.ok) {
-    return json({ error: gemini?.error?.message || "Error de Gemini." }, 502);
   }
 
+  let geminiResult = await callGemini({
+    temperature: 0.45,
+    maxOutputTokens: 2200,
+    responseMimeType: "application/json",
+    responseSchema
+  });
+
+  if (!geminiResult.response?.ok) {
+    geminiResult = await callGemini({
+      temperature: 0.45,
+      maxOutputTokens: 1800,
+      responseMimeType: "application/json"
+    });
+  }
+
+  if (!geminiResult.response?.ok) {
+    geminiResult = await callGemini({
+      temperature: 0.45,
+      maxOutputTokens: 1200
+    });
+  }
+
+  if (!geminiResult.response?.ok) {
+    const providerMessage = safeText(geminiResult.data?.error?.message, 900) || "Gemini no respondió.";
+    console.error("Gemini request failed", {
+      model: MODEL,
+      status: geminiResult.response?.status || 0,
+      message: providerMessage
+    });
+    return json({
+      error: "Gemini no pudo responder.",
+      provider_error: providerMessage,
+      provider_status: geminiResult.response?.status || 0,
+      model: MODEL,
+      key_configured: Boolean(GEMINI_API_KEY)
+    }, 502);
+  }
+
+  const gemini = geminiResult.data;
   const raw = gemini?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("").trim();
-  if (!raw) return json({ error: "Gemini no devolvió una respuesta utilizable." }, 502);
+  if (!raw) {
+    return json({ error: "Gemini no devolvió una respuesta utilizable.", model: MODEL }, 502);
+  }
 
   let output: Record<string, unknown>;
   try {
     output = JSON.parse(raw);
   } catch {
-    return json({ error: "Gemini devolvió una respuesta no estructurada." }, 502);
+    output = {
+      reply: raw,
+      profile,
+      missing_fields: [],
+      proposal_ready: false,
+      intent_level: "INTERÉS",
+      stage: "DISCOVERY",
+      summary: raw.slice(0, 1800),
+      experiences: [],
+      contact: {
+        name: safeText((profile as Record<string, unknown>).nombre, 120),
+        whatsapp: "",
+        email: ""
+      },
+      contact_ready: false
+    };
   }
-
   const rawContact = output.contact && typeof output.contact === "object" ? output.contact as Record<string, unknown> : {};
   const contact = {
     name: safeText(rawContact.name, 120),
