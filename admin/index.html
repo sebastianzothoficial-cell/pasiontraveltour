@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Pasión Travel Tour | Admin</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<section id="loginView" class="auth-shell"><div class="auth-card">
+<div class="admin-brand"><span>Pasión</span><small>TRAVEL TOUR · ADMIN</small></div>
+<p class="eyebrow">ACCESO PRIVADO</p><h1>Panel de control</h1><p class="muted">Ingresá con tu cuenta administrativa.</p>
+<form id="loginForm">
+<label>Email<input id="email" type="email" autocomplete="username" required placeholder="admin@pasiontraveltour.com"></label>
+<label>Contraseña<input id="password" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+<button class="primary" type="submit">Ingresar <span>→</span></button><p id="loginMessage" class="message" role="alert"></p>
+</form></div></section>
+<section id="dashboardView" class="dashboard hidden">
+<header class="topbar"><a class="brand" href="../">Pasión <small>TRAVEL TOUR · ADMIN</small></a><div class="top-actions"><span id="userEmail"></span><button id="logoutBtn" class="ghost">Cerrar sesión</button></div></header>
+<main class="content">
+<div class="heading"><div><p class="eyebrow">CENTRO DE OPERACIONES</p><h1>Panel de control</h1><p class="muted">Tu backoffice para leads, clientes y operación.</p></div><a class="primary link-button" href="../">Ver sitio público →</a></div>
+<div class="stats"><article><span>LEADS</span><strong id="leadCount">0</strong><small>Consultas registradas</small></article><article><span>VIAJES</span><strong id="tripCount">0</strong><small>Viajes en gestión</small></article><article><span>CLIENTES</span><strong id="clientCount">0</strong><small>Clientes registrados</small></article><article><span>VENTAS</span><strong id="salesCount">0</strong><small>Ventas confirmadas</small></article></div>
+<div class="grid">
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">LEADS</p><h2>Consultas</h2></div></div><div class="empty"><strong>Aún no hay leads conectados.</strong><p>El formulario público se conectará a una base de datos para que cada consulta aparezca automáticamente acá.</p></div></section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">OPERACIÓN</p><h2>Atajos</h2></div></div><div class="shortcuts"><a href="../#contacto">Formulario público →</a><a href="https://wa.me/5548996752532">WhatsApp comercial →</a><a href="../#tipo-viaje">Tipos de viaje →</a><a href="../#argentina">Destinos →</a></div></section>
+</div>
+<section class="panel roadmap"><p class="eyebrow">BACKOFFICE</p><h2>Próximos módulos</h2><div class="modules"><span>Leads</span><span>Clientes</span><span>Cotizaciones</span><span>Reservas</span><span>Proveedores</span><span>Pagos</span><span>Operaciones</span><span>Reportes</span></div></section>
+</main></section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script>
+</body></html>
