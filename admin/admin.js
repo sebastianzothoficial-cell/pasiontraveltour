@@ -27,7 +27,7 @@ const MODULES={
  profiles:{title:"Usuarios",desc:"Perfiles internos y roles administrativos. La cuenta Auth se gestiona en Supabase.",table:"profiles",search:["full_name","role"],profile:true,fields:[["full_name","Nombre","text"],["role","Rol","select",true,ROLES]]}
 };
 const PERMS={
- admin:{create:["leads","clients","suppliers","experiences","quotes","reservations","payments","operations","profiles"],edit:["leads","clients","suppliers","experiences","quotes","reservations","payments","operations","profiles"],delete:["clients","suppliers","experiences","quotes","reservations","payments","operations"]},
+ admin:{create:["leads","clients","suppliers","experiences","quotes","reservations","payments","operations"],edit:["leads","clients","suppliers","experiences","quotes","reservations","payments","operations","profiles"],delete:["clients","suppliers","experiences","quotes","reservations","payments","operations"]},
  manager:{create:["clients","suppliers","experiences","quotes","reservations","payments","operations"],edit:["leads","clients","suppliers","experiences","quotes","reservations","payments","operations"],delete:["clients","suppliers","experiences","quotes","reservations","payments","operations"]},
  operator:{create:["clients","operations"],edit:["leads","clients","operations"],delete:[]}
 };
