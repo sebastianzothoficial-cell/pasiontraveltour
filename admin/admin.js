@@ -1,133 +1,40 @@
 const SUPABASE_URL=window.PASION_SUPABASE_URL||"";
 const SUPABASE_ANON_KEY=window.PASION_SUPABASE_ANON_KEY||"";
-const loginView=document.querySelector("#loginView");
-const dashboardView=document.querySelector("#dashboardView");
-const loginForm=document.querySelector("#loginForm");
-const loginMessage=document.querySelector("#loginMessage");
-const adminMessage=document.querySelector("#adminMessage");
-const userEmail=document.querySelector("#userEmail");
-const logoutBtn=document.querySelector("#logoutBtn");
-const refreshBtn=document.querySelector("#refreshBtn");
-const leadsBody=document.querySelector("#leadsBody");
-const statusFilter=document.querySelector("#statusFilter");
-const languageFilter=document.querySelector("#languageFilter");
-const destinationFilter=document.querySelector("#destinationFilter");
-const tripTypeFilter=document.querySelector("#tripTypeFilter");
-const leadCount=document.querySelector("#leadCount");
-const newLeadCount=document.querySelector("#newLeadCount");
-const qualifiedLeadCount=document.querySelector("#qualifiedLeadCount");
-const wonLeadCount=document.querySelector("#wonLeadCount");
-const statusSummary=document.querySelector("#statusSummary");
-let client=null;
-let currentUser=null;
-let allLeads=[];
+const loginView=document.querySelector("#loginView"),dashboardView=document.querySelector("#dashboardView"),loginForm=document.querySelector("#loginForm"),loginMessage=document.querySelector("#loginMessage"),adminMessage=document.querySelector("#adminMessage"),userEmail=document.querySelector("#userEmail"),logoutBtn=document.querySelector("#logoutBtn"),refreshBtn=document.querySelector("#refreshBtn");
+const moduleNav=document.querySelector("#moduleNav"),dashboardModule=document.querySelector("#dashboardModule"),dataModule=document.querySelector("#dataModule"),moduleTitle=document.querySelector("#moduleTitle"),moduleDescription=document.querySelector("#moduleDescription"),moduleEyebrow=document.querySelector("#moduleEyebrow"),tableTitle=document.querySelector("#tableTitle"),tableEyebrow=document.querySelector("#tableEyebrow"),tableHead=document.querySelector("#tableHead"),tableBody=document.querySelector("#tableBody"),moduleFilters=document.querySelector("#moduleFilters"),recordCount=document.querySelector("#recordCount");
+const leadCount=document.querySelector("#leadCount"),newLeadCount=document.querySelector("#newLeadCount"),qualifiedLeadCount=document.querySelector("#qualifiedLeadCount"),wonLeadCount=document.querySelector("#wonLeadCount"),statusSummary=document.querySelector("#statusSummary");
+let client=null,currentUser=null,allLeads=[];
 
 const STATUSES=["new","contacted","qualified","quoted","won","lost","archived"];
+const MODULES={
+ leads:{title:"Leads",desc:"Consultas comerciales captadas desde el sitio y WhatsApp.",table:"leads",fields:[["created_at","Fecha"],["name","Cliente"],["whatsapp","WhatsApp"],["email","Email"],["destination","Destino"],["trip_type","Tipo"],["travelers","Viajeros"],["language","Idioma"],["status","Estado"]]},
+ clients:{title:"Clientes",desc:"Personas que pasaron de consulta a relación comercial.",table:"clients",fields:[["created_at","Alta"],["name","Nombre"],["email","Email"],["whatsapp","WhatsApp"],["language","Idioma"],["notes","Notas"]]},
+ suppliers:{title:"Proveedores",desc:"Red de ejecución: costos, condiciones y alternativas.",table:"suppliers",fields:[["name","Proveedor"],["service_type","Servicio"],["contact_name","Contacto"],["whatsapp","WhatsApp"],["city","Ciudad"],["net_price","Costo neto"],["currency","Moneda"],["summa_status","Filtro Summa"],["status","Estado"]]},
+ experiences:{title:"Experiencias",desc:"Catálogo vendible vinculado a un proveedor y con ejecución verificada.",table:"experiences",fields:[["name","Experiencia"],["category","Categoría"],["destination","Destino"],["supplier_id","Proveedor"],["cost","Costo"],["currency","Moneda"],["margin","Margen"],["sale_price","Venta"],["execution_verified","Ejecución"],["active","Activa"]]},
+ quotes:{title:"Cotizaciones",desc:"Presupuestos enviados y estados comerciales.",table:"quotes",fields:[["created_at","Fecha"],["client_id","Cliente"],["lead_id","Lead"],["status","Estado"],["currency","Moneda"],["subtotal","Subtotal"],["discount","Descuento"],["total","Total"],["valid_until","Válida hasta"]]},
+ reservations:{title:"Reservas",desc:"Servicios confirmados y su vínculo con proveedor y cliente.",table:"reservations",fields:[["created_at","Creada"],["service_date","Servicio"],["client_id","Cliente"],["supplier_id","Proveedor"],["status","Estado"],["confirmation_code","Confirmación"],["supplier_cost","Costo"],["sale_amount","Venta"],["currency","Moneda"]]},
+ payments:{title:"Pagos",desc:"Cobros al cliente y pagos a proveedores.",table:"payments",fields:[["created_at","Fecha"],["direction","Dirección"],["status","Estado"],["amount","Importe"],["currency","Moneda"],["method","Método"],["reference","Referencia"],["paid_at","Pagado"]]},
+ operations:{title:"Operaciones",desc:"Ejecución diaria, responsables, horarios y posibles incidentes.",table:"operations",fields:[["created_at","Creada"],["reservation_id","Reserva"],["status","Estado"],["assigned_to","Responsable"],["scheduled_at","Programada"],["pickup","Pickup"],["dropoff","Dropoff"],["incident_notes","Incidencias"]]},
+ audit:{title:"Auditoría",desc:"Registro de acciones relevantes sobre el backoffice.",table:"audit_logs",fields:[["created_at","Fecha"],["actor_id","Actor"],["entity_type","Entidad"],["entity_id","ID"],["action","Acción"],["details","Detalle"]]},
+ profiles:{title:"Usuarios",desc:"Perfiles internos y roles administrativos.",table:"profiles",fields:[["created_at","Alta"],["full_name","Nombre"],["role","Rol"],["updated_at","Actualizado"]]}
+};
 
-function message(v){if(loginMessage)loginMessage.textContent=v||""}
-function adminMsg(v){if(adminMessage)adminMessage.textContent=v||""}
-function showDashboard(user){
- loginView.classList.add("hidden");
- dashboardView.classList.remove("hidden");
- currentUser=user;
- userEmail.textContent=user?.email||"";
- loadDashboard();
+function msg(v){if(adminMessage)adminMessage.textContent=v||""}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function fmt(v,key){if(v===null||v===undefined||v==="")return "-";if(key.includes("created_at")||key.includes("updated_at")||key==="paid_at"||key==="service_date"||key==="scheduled_at"||key==="valid_until")return new Intl.DateTimeFormat("es-AR",{dateStyle:"short",timeStyle:key==="service_date"?"short":"short"}).format(new Date(v));if(typeof v==="object")return JSON.stringify(v);if(key==="execution_verified"||key==="active")return v?"Sí":"No";return String(v)}
+function renderDashboard(){const counts=Object.fromEntries(STATUSES.map(s=>[s,0]));allLeads.forEach(l=>{if(counts[l.status]!==undefined)counts[l.status]++});leadCount.textContent=allLeads.length;newLeadCount.textContent=counts.new;qualifiedLeadCount.textContent=counts.qualified;wonLeadCount.textContent=counts.won;statusSummary.innerHTML=STATUSES.map(s=>`<div><span>${s}</span><strong>${counts[s]}</strong></div>`).join("")}
+async function loadLeads(){if(!client||!currentUser){renderDashboard();return}const {data,error}=await client.from("leads").select("*").order("created_at",{ascending:false});if(error){allLeads=[];msg("Modo desarrollo: autenticación requerida para consultar los leads.");renderDashboard();return}allLeads=data||[];renderDashboard()}
+async function loadModule(name){const cfg=MODULES[name];if(!cfg)return;moduleEyebrow.textContent="BACKOFFICE";moduleTitle.textContent=cfg.title;moduleDescription.textContent=cfg.desc;dashboardModule.classList.add("hidden");dataModule.classList.remove("hidden");tableEyebrow.textContent=cfg.table.toUpperCase();tableTitle.textContent=cfg.title;moduleFilters.innerHTML='<input id="quickFilter" placeholder="Buscar en este módulo…">';tableHead.innerHTML="<tr>"+cfg.fields.map(f=>`<th>${f[1]}</th>`).join("")+"</tr>";tableBody.innerHTML='<tr><td colspan="'+cfg.fields.length+'">Cargando…</td></tr>';msg("");
+if(!client||!currentUser){tableBody.innerHTML='<tr><td colspan="'+cfg.fields.length+'">Panel disponible. Para ver datos reales hay que iniciar sesión.</td></tr>';recordCount.textContent="0";return}
+const {data,error}=await client.from(cfg.table).select("*").order("created_at",{ascending:false});if(error){tableBody.innerHTML='<tr><td colspan="'+cfg.fields.length+'">No se pudieron cargar los registros. Revisá permisos y RLS.</td></tr>';recordCount.textContent="0";msg("La consulta fue bloqueada por permisos de Supabase.");return}
+let rows=data||[];recordCount.textContent=rows.length;
+const render=filter=>{const q=(filter||"").toLowerCase();const visible=rows.filter(row=>!q||JSON.stringify(row).toLowerCase().includes(q));tableBody.innerHTML=visible.length?visible.map(row=>"<tr>"+cfg.fields.map(f=>`<td>${esc(fmt(row[f[0]],f[0]))}</td>`).join("")+"</tr>").join(""):'<tr><td colspan="'+cfg.fields.length+'">No hay registros.</td></tr>'};
+render("");document.querySelector("#quickFilter").addEventListener("input",e=>render(e.target.value))
 }
-function showLogin(){
- dashboardView.classList.add("hidden");
- loginView.classList.remove("hidden");
- currentUser=null;
-}
-function esc(value){
- return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function formatDate(value){
- if(!value)return "-";
- return new Intl.DateTimeFormat("es-AR",{dateStyle:"short",timeStyle:"short"}).format(new Date(value));
-}
-function filteredLeads(){
- const status=statusFilter.value,language=languageFilter.value,destination=destinationFilter.value.trim().toLowerCase(),trip=tripTypeFilter.value.trim().toLowerCase();
- return allLeads.filter(l=>
-  (!status||l.status===status)&&
-  (!language||l.language===language)&&
-  (!destination||String(l.destination||"").toLowerCase().includes(destination))&&
-  (!trip||String(l.trip_type||"").toLowerCase().includes(trip))
- );
-}
-function renderLeads(){
- const rows=filteredLeads();
- if(!rows.length){leadsBody.innerHTML='<tr><td colspan="6">No hay leads con estos filtros.</td></tr>';return;}
- leadsBody.innerHTML=rows.map(l=>`<tr>
- <td><small>${esc(formatDate(l.created_at))}</small></td>
- <td><strong>${esc(l.name)}</strong><small>${esc(l.message||"")}</small></td>
- <td><small>${esc(l.whatsapp||"-")}<br>${esc(l.email||"-")}</small></td>
- <td><strong>${esc(l.destination||"-")}</strong><small>${esc(l.trip_type||"-")} · ${esc(l.travelers||"-")} viajeros</small></td>
- <td><span class="badge">${esc((l.language||"-").toUpperCase())}</span></td>
- <td><select class="status-select" data-lead-id="${esc(l.id)}">${STATUSES.map(s=>`<option value="${s}" ${s===l.status?"selected":""}>${s}</option>`).join("")}</select></td>
- </tr>`).join("");
- document.querySelectorAll(".status-select").forEach(select=>select.addEventListener("change",()=>updateLeadStatus(select.dataset.leadId,select.value)));
-}
-function renderSummary(){
- const counts=Object.fromEntries(STATUSES.map(s=>[s,0]));
- allLeads.forEach(l=>{if(counts[l.status]!==undefined)counts[l.status]++;});
- leadCount.textContent=allLeads.length;
- newLeadCount.textContent=counts.new;
- qualifiedLeadCount.textContent=counts.qualified;
- wonLeadCount.textContent=counts.won;
- statusSummary.innerHTML=STATUSES.map(s=>`<div><span>${s}</span><strong>${counts[s]}</strong></div>`).join("");
-}
-async function loadDashboard(){
- if(!client||!currentUser)return;
- adminMsg("");
- const {data,error}=await client.from("leads").select("*").order("created_at",{ascending:false});
- if(error){
-  allLeads=[];
-  renderSummary();
-  leadsBody.innerHTML='<tr><td colspan="6">No se pudieron cargar los leads. Verificá que tu usuario tenga un perfil staff en Supabase.</td></tr>';
-  adminMsg("Acceso autenticado, pero el perfil todavía no tiene permisos de staff.");
-  return;
- }
- allLeads=data||[];
- renderSummary();
- renderLeads();
-}
-async function updateLeadStatus(id,status){
- const lead=allLeads.find(l=>l.id===id);
- if(!lead||lead.status===status)return;
- const previous=lead.status;
- const {error}=await client.from("leads").update({status}).eq("id",id);
- if(error){
-  adminMsg("No se pudo actualizar el estado del lead.");
-  renderLeads();
-  return;
- }
- const audit={actor_id:currentUser.id,entity_type:"lead",entity_id:id,action:"status_changed",details:{from:previous,to:status}};
- const auditResult=await client.from("audit_logs").insert(audit);
- if(auditResult.error)console.warn("No se pudo registrar auditoría:",auditResult.error);
- lead.status=status;
- renderSummary();
- renderLeads();
-}
-async function boot(){
- // Modo temporal sin login. Los datos reales siguen protegidos por RLS.
- loginView.classList.add("hidden");
- dashboardView.classList.remove("hidden");
- currentUser=null;
- userEmail.textContent="MODO DESARROLLO";
- allLeads=[];
- renderSummary();
- leadsBody.innerHTML='<tr><td colspan="6">Panel abierto temporalmente. Los leads reales requieren autenticación.</td></tr>';
- adminMsg("Modo desarrollo sin login. Los datos reales permanecen protegidos.");
-}
-loginForm.addEventListener("submit",async e=>{
- e.preventDefault();message("");
- if(!client){message("El acceso seguro todavía no está configurado.");return}
- const email=document.querySelector("#email").value.trim();
- const password=document.querySelector("#password").value;
- const {error}=await client.auth.signInWithPassword({email,password});
- if(error)message("No se pudo iniciar sesión. Verificá email y contraseña.");
-});
-logoutBtn.addEventListener("click",()=>{window.location.href="../";});
-refreshBtn.addEventListener("click",loadDashboard);
-[statusFilter,languageFilter,destinationFilter,tripTypeFilter].forEach(el=>el.addEventListener("input",renderLeads));
+function showDashboard(){moduleNav.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.module==="dashboard"));moduleTitle.textContent="Dashboard";moduleDescription.textContent="Vista general del negocio receptivo.";moduleEyebrow.textContent="CENTRO DE OPERACIONES";dashboardModule.classList.remove("hidden");dataModule.classList.add("hidden");loadLeads()}
+moduleNav.addEventListener("click",e=>{const btn=e.target.closest(".nav-item");if(!btn)return;moduleNav.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));btn.classList.add("active");btn.dataset.module==="dashboard"?showDashboard():loadModule(btn.dataset.module)});
+refreshBtn.addEventListener("click",()=>{const active=moduleNav.querySelector(".nav-item.active")?.dataset.module||"dashboard";active==="dashboard"?showDashboard():loadModule(active)});
+logoutBtn.addEventListener("click",()=>{window.location.href="../"});
+loginForm.addEventListener("submit",async e=>{e.preventDefault();if(!client)return;if(!client)loginMessage.textContent="Supabase no configurado";const email=document.querySelector("#email").value.trim(),password=document.querySelector("#password").value;const {error}=await client.auth.signInWithPassword({email,password});if(error)loginMessage.textContent="No se pudo iniciar sesión."});
+async function boot(){if(window.supabase&&SUPABASE_URL&&SUPABASE_ANON_KEY)client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);showDashboard()}
 boot();
