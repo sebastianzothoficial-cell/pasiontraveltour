@@ -6,43 +6,62 @@
 <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-<section id="loginView" class="auth-shell hidden"><div class="auth-card">
+<section id="loginView" class="auth-shell">
+<div class="auth-card">
 <div class="admin-brand"><span>Pasión</span><small>TRAVEL TOUR · ADMIN</small></div>
-<p class="eyebrow">ACCESO PRIVADO</p><h1>Panel de control</h1><p class="muted">Ingresá con tu cuenta administrativa.</p>
-<form id="loginForm"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Ingresar →</button><p id="loginMessage" class="message"></p></form>
+<p class="eyebrow">ACCESO PRIVADO</p><h1>Panel de control</h1>
+<p class="muted">Ingresá con tu cuenta administrativa de Supabase.</p>
+<form id="loginForm">
+<label>Email<input id="email" type="email" autocomplete="username" required></label>
+<label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label>
+<button class="primary" type="submit">Ingresar →</button><p id="loginMessage" class="message"></p>
+</form>
 </div></section>
 
-<section id="dashboardView" class="dashboard">
-<header class="topbar"><a class="brand" href="../">Pasión <small>TRAVEL TOUR · BACKOFFICE</small></a><div class="top-actions"><span id="userEmail">MODO DESARROLLO</span><button id="logoutBtn" class="ghost">Salir</button></div></header>
+<section id="dashboardView" class="dashboard hidden">
+<header class="topbar"><a class="brand" href="../">Pasión <small>TRAVEL TOUR · BACKOFFICE</small></a>
+<div class="top-actions"><span id="userEmail"></span><button id="logoutBtn" class="ghost">Salir</button></div></header>
 <div class="admin-layout">
-<aside class="sidebar">
-<p class="eyebrow">GESTIÓN</p>
-<nav id="moduleNav">
+<aside class="sidebar"><p class="eyebrow">GESTIÓN</p><nav id="moduleNav">
 <button class="nav-item active" data-module="dashboard">▦ Dashboard</button>
-<button class="nav-item" data-module="leads">◎ Leads</button>
-<button class="nav-item" data-module="clients">◯ Clientes</button>
-<button class="nav-item" data-module="suppliers">◇ Proveedores</button>
-<button class="nav-item" data-module="experiences">✦ Experiencias</button>
-<button class="nav-item" data-module="quotes">▤ Cotizaciones</button>
-<button class="nav-item" data-module="reservations">◈ Reservas</button>
-<button class="nav-item" data-module="payments">◉ Pagos</button>
-<button class="nav-item" data-module="operations">⚙ Operaciones</button>
-<button class="nav-item" data-module="audit">⌁ Auditoría</button>
-<button class="nav-item" data-module="profiles">♙ Usuarios</button>
-</nav>
-<div class="sidebar-foot"><a href="../">← Sitio público</a><span>Pasión Travel Tour</span></div>
-</aside>
+<button class="nav-item" data-module="leads">◎ Leads</button><button class="nav-item" data-module="clients">◯ Clientes</button>
+<button class="nav-item" data-module="suppliers">◇ Proveedores</button><button class="nav-item" data-module="experiences">✦ Experiencias</button>
+<button class="nav-item" data-module="quotes">▤ Cotizaciones</button><button class="nav-item" data-module="reservations">◈ Reservas</button>
+<button class="nav-item" data-module="payments">◉ Pagos</button><button class="nav-item" data-module="operations">⚙ Operaciones</button>
+<button class="nav-item" data-module="audit">⌁ Auditoría</button><button class="nav-item" data-module="profiles">♙ Usuarios</button>
+<button class="nav-item" data-module="settings">⚙ Configuración</button>
+</nav><div class="sidebar-foot"><a href="../">← Sitio público</a><span>Pasión Travel Tour</span></div></aside>
 
 <main class="content">
 <div class="heading"><div><p class="eyebrow" id="moduleEyebrow">CENTRO DE OPERACIONES</p><h1 id="moduleTitle">Dashboard</h1><p class="muted" id="moduleDescription">Vista general del negocio receptivo.</p></div><button id="refreshBtn" class="primary">Actualizar</button></div>
-
 <section id="dashboardModule" class="module-view">
-<div class="stats"><article><span>LEADS</span><strong id="leadCount">0</strong><small>Consultas registradas</small></article><article><span>NUEVOS</span><strong id="newLeadCount">0</strong><small>Sin contactar</small></article><article><span>CALIFICADOS</span><strong id="qualifiedLeadCount">0</strong><small>Oportunidades</small></article><article><span>GANADOS</span><strong id="wonLeadCount">0</strong><small>Ventas confirmadas</small></article></div>
-<div class="grid"><section class="panel"><div class="panel-head"><div><p class="eyebrow">EMBUDO</p><h2>Estados de leads</h2></div></div><div class="status-summary" id="statusSummary"></div></section><section class="panel"><div class="panel-head"><div><p class="eyebrow">SISTEMA</p><h2>Arquitectura</h2></div></div><div class="modules"><span>CRM</span><span>Ventas</span><span>Operación</span><span>Finanzas</span><span>Auditoría</span></div></section></div>
+<div class="stats">
+<article><span>LEADS</span><strong id="leadCount">0</strong><small>Total</small></article>
+<article><span>NUEVOS</span><strong id="newLeadCount">0</strong><small>Sin contactar</small></article>
+<article><span>CALIFICADOS</span><strong id="qualifiedLeadCount">0</strong><small>Oportunidades</small></article>
+<article><span>GANADOS</span><strong id="wonLeadCount">0</strong><small>Ventas</small></article>
+</div>
+<div class="stats stats-secondary">
+<article><span>RESERVAS</span><strong id="reservationCount">0</strong><small>Total</small></article>
+<article><span>PAGOS</span><strong id="paymentCount">0</strong><small>Registros</small></article>
+<article><span>OPERACIONES</span><strong id="operationCount">0</strong><small>Servicios</small></article>
+<article><span>EXPERIENCIAS ACTIVAS</span><strong id="experienceCount">0</strong><small>Catálogo</small></article>
+</div>
+<div class="grid"><section class="panel"><div class="panel-head"><div><p class="eyebrow">EMBUDO</p><h2>Estados de leads</h2></div></div><div class="status-summary" id="statusSummary"></div></section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">SISTEMA</p><h2>Arquitectura</h2></div></div><div class="modules"><span>CRM</span><span>Ventas</span><span>Operación</span><span>Finanzas</span><span>Auditoría</span></div></section></div>
 </section>
 
-<section id="dataModule" class="module-view hidden"><section class="panel"><div class="panel-head"><div><p class="eyebrow" id="tableEyebrow">GESTIÓN</p><h2 id="tableTitle">Registros</h2></div><span id="recordCount" class="badge">0</span></div><div id="adminMessage" class="message"></div><div id="moduleFilters" class="filters"></div><div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div></section></section>
-</main></div>
-</section>
+<section id="dataModule" class="module-view hidden"><section class="panel">
+<div class="panel-head"><div><p class="eyebrow" id="tableEyebrow">GESTIÓN</p><h2 id="tableTitle">Registros</h2></div><div class="panel-actions"><button id="createBtn" class="primary small">+ Nuevo</button><span id="recordCount" class="badge">0</span></div></div>
+<div id="adminMessage" class="message"></div><div id="moduleFilters" class="filters"></div>
+<div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+</section></section>
+
+<section id="settingsModule" class="module-view hidden"><div class="grid"><section class="panel"><p class="eyebrow">NEGOCIO</p><h2>Configuración comercial</h2><div class="settings-list"><div><b>WhatsApp</b><span>+55 48 99675-2532</span></div><div><b>Monedas</b><span>ARS · USD · BRL · EUR</span></div><div><b>Mercado inicial</b><span>Brasil → Buenos Aires / Argentina</span></div><div><b>Regla comercial</b><span>No vender una experiencia sin ejecución identificada y verificada.</span></div></div></section>
+<section class="panel"><p class="eyebrow">SEGURIDAD</p><h2>Política operativa</h2><div class="settings-list"><div><b>Auth</b><span>Supabase email/password</span></div><div><b>Roles</b><span>admin · manager · operator</span></div><div><b>RLS</b><span>Activo en las tablas públicas</span></div><div><b>Secretos</b><span>Nunca guardar service_role, sb_secret o passwords en frontend.</span></div></div></section></div></section>
+</main></div></section>
+
+<div id="recordModal" class="modal hidden"><div class="modal-card"><div class="modal-head"><div><p class="eyebrow" id="modalEyebrow">REGISTRO</p><h2 id="modalTitle">Nuevo registro</h2></div><button id="modalClose" class="ghost">Cerrar</button></div><form id="recordForm"><div id="recordFields" class="form-grid"></div><div id="quoteItems" class="quote-items hidden"></div><div class="modal-actions"><button type="button" id="modalCancel" class="ghost">Cancelar</button><button type="submit" class="primary">Guardar</button></div><p id="formMessage" class="message"></p></form></div></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script>
 </body></html>
