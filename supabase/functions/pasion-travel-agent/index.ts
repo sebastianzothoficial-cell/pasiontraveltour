@@ -225,6 +225,25 @@ Deno.serve(async (req) => {
     const { data, error } = await ctx.supabaseAdmin.from("ai_travel_requests").insert(row).select("id").single();
     if (error) return json({ error: "No se pudo guardar la solicitud.", detail: error.message }, 500);
 
+    const leadMessage = [
+      "Solicitud generada por el asesor IA.",
+      summary,
+      "Experiencias: " + (normalizeArray(profile.servicios_solicitados).join(", ") || "-")
+    ].join("\\n");
+    await ctx.supabaseAdmin.from("leads").insert({
+      name: row.name,
+      email: row.email,
+      whatsapp: row.whatsapp,
+      language: row.language,
+      trip_type: "ai_agent",
+      destination: "Buenos Aires",
+      travel_start: null,
+      travel_end: null,
+      travelers: row.travelers,
+      message: leadMessage,
+      source: "website"
+    });
+
     return json({
       ok: true,
       requestId: data.id,
