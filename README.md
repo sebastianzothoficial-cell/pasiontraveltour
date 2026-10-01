@@ -87,3 +87,17 @@ Migración versionada:
 7. Verificar el deploy público y el flujo web → lead → WhatsApp.
 
 Hasta completar esas pruebas de entorno real, el estado correcto es `NEEDS_RUNTIME_PROOF`, no `ADMIN DONE`.
+
+
+## Asesor IA de viajes
+
+El sitio público incluye un agente de viajes con Gemini en:
+
+- `travel-agent.js`: conversación, descubrimiento, resumen, solicitud y WhatsApp.
+- `travel-agent.css`: interfaz responsive del asesor.
+- `supabase/functions/pasion-travel-agent/index.ts`: Edge Function pública protegida en servidor.
+- `public.ai_travel_requests`: solicitudes estructuradas generadas por el asesor.
+- `window.PASION_TRAVEL_AGENT_FUNCTION_URL`: endpoint configurable.
+- `window.PASION_WHATSAPP_NUMBER`: número comercial configurable.
+
+La clave `GEMINI_API_KEY` permanece exclusivamente en Supabase Edge Functions. El agente puede utilizar Google Search para información turística que pueda cambiar y nunca debe inventar precio, disponibilidad o reservas.
