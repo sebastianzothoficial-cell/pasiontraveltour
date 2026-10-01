@@ -11,7 +11,9 @@ function aiRender(text){if(aiOutput)aiOutput.textContent=text||"Sin respuesta."}
 async function runAI(mode="analyze"){
  const prompt=(aiInput?.value||"").trim();
  if(!prompt){aiSetStatus("Escribí la consulta del cliente.",true);return}
- aiRun.disabled=true;aiSetStatus(AI_PREVIEW?"PREVIEW · simulación":"Procesando con Gemini…");
+ const trigger=document.activeElement?.matches?.("[data-ai-mode]")?document.activeElement:null;
+ if(trigger)trigger.disabled=true;
+ aiSetStatus(AI_PREVIEW?"PREVIEW · simulación":"Procesando con Gemini…");
  try{
   if(AI_PREVIEW){
    await new Promise(r=>setTimeout(r,450));
@@ -30,7 +32,7 @@ async function runAI(mode="analyze"){
   aiRender(data.output||data.text||JSON.stringify(data,null,2));
   aiSetStatus("Listo · propuesta generada");
  }catch(e){aiSetStatus(e.message||"No se pudo procesar.",true)}
- finally{aiRun.disabled=false}
+ finally{if(trigger)trigger.disabled=false}
 }
 document.addEventListener("DOMContentLoaded",()=>{
  document.querySelectorAll("[data-ai-mode]").forEach(b=>b.addEventListener("click",()=>runAI(b.dataset.aiMode)));
