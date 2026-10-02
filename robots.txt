@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://pasiontraveltour.vercel.app/sitemap.xml
-Disallow: /admin/

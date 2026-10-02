@@ -1,8 +1,0 @@
-{
-  "name": "Pasión Travel Tour",
-  "description": "Receptivo en Buenos Aires y Argentina para viajeros de Brasil. Tango, fútbol, gastronomía, parejas, familias, traslados y experiencias a medida.",
-  "permissions": [],
-  "capabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

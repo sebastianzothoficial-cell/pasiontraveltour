@@ -1,5 +1,0 @@
-[functions.gemini-copilot]
-verify_jwt = false
-
-[functions.pasion-travel-agent]
-verify_jwt = false
