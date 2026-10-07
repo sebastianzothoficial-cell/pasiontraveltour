@@ -3,6 +3,7 @@ const SUPABASE_URL=window.PASION_SUPABASE_URL||"";
 const SUPABASE_ANON_KEY=window.PASION_SUPABASE_ANON_KEY||"";
 const $=s=>document.querySelector(s);
 const modeBadge=$("#modeBadge");
+const dashboardView=$("#dashboardView"),loginView=$("#loginView"),loginForm=$("#loginForm"),loginEmail=$("#loginEmail"),loginPassword=$("#loginPassword"),loginBtn=$("#loginBtn"),loginMessage=$("#loginMessage"),logoutBtn=$("#logoutBtn");
 const adminMessage=$("#adminMessage"),refreshBtn=$("#refreshBtn"),moduleNav=$("#moduleNav"),dashboardModule=$("#dashboardModule"),dataModule=$("#dataModule"),settingsModule=$("#settingsModule"),aiModule=$("#aiModule"),moduleTitle=$("#moduleTitle"),moduleDescription=$("#moduleDescription"),moduleEyebrow=$("#moduleEyebrow"),tableTitle=$("#tableTitle"),tableEyebrow=$("#tableEyebrow"),tableHead=$("#tableHead"),tableBody=$("#tableBody"),moduleFilters=$("#moduleFilters"),recordCount=$("#recordCount"),createBtn=$("#createBtn"),recordModal=$("#recordModal"),modalTitle=$("#modalTitle"),modalEyebrow=$("#modalEyebrow"),modalClose=$("#modalClose"),modalCancel=$("#modalCancel"),recordForm=$("#recordForm"),recordFields=$("#recordFields"),formMessage=$("#formMessage"),quoteItems=$("#quoteItems");
 const STATUSES=["new","contacted","qualified","quoted","won","lost","archived"];
 const ROLES=["admin","manager","operator"];
@@ -53,7 +54,9 @@ function fmt(v,key){if(v===null||v===undefined||v==="")return "-";if(key==="deta
 function labelFor(table,row){if(!row)return"-";if(table==="profiles")return row.full_name||row.id;return row.name||row.full_name||row.email||row.confirmation_code||row.id}
 async function relationOptions(kind){if(relationCache[kind])return relationCache[kind];if(PREVIEW_MODE){relationCache[kind]=(DEMO_DATA[kind]||[]).slice();return relationCache[kind]}const table=kind==="profiles"?"profiles":kind;const {data}=await client.from(table).select("*").limit(200).order(table==="profiles"?"full_name":"name",{ascending:true});relationCache[kind]=data||[];return relationCache[kind]}
 function msg(v){if(adminMessage)adminMessage.textContent=v||""}
-function showApp(){if(dashboardView)dashboardView.classList.remove("hidden");}
+function showApp(){loginView?.classList.add("hidden");dashboardView?.classList.remove("hidden");}
+function showLogin(message=""){dashboardView?.classList.add("hidden");loginView?.classList.remove("hidden");if(loginMessage)loginMessage.textContent=message;}
+function setLoginMessage(message){if(loginMessage)loginMessage.textContent=message||"";}
 function renderDashboard(counts){leadCount.textContent=counts.leads.total;newLeadCount.textContent=counts.leads.new;qualifiedLeadCount.textContent=counts.leads.qualified;wonLeadCount.textContent=counts.leads.won;reservationCount.textContent=counts.reservations;paymentCount.textContent=counts.payments;operationCount.textContent=counts.operations;experienceCount.textContent=counts.experiences;document.querySelector("#statusSummary").innerHTML=STATUSES.map(s=>`<div><span>${s}</span><strong>${counts.leads[s]||0}</strong></div>`).join("")}
 async function loadDashboard(){if(PREVIEW_MODE){const rows=DEMO_DATA.leads||[];const counts={leads:{total:rows.length},reservations:(DEMO_DATA.reservations||[]).length,payments:(DEMO_DATA.payments||[]).length,operations:(DEMO_DATA.operations||[]).length,experiences:(DEMO_DATA.experiences||[]).filter(x=>x.active).length};STATUSES.forEach(s=>counts.leads[s]=rows.filter(x=>x.status===s).length);renderDashboard(counts);return}if(!client||!currentUser)return;const counts={leads:{total:0},reservations:0,payments:0,operations:0,experiences:0};STATUSES.forEach(s=>counts.leads[s]=0);const queries=await Promise.all(["leads","reservations","payments","operations","experiences"].map(t=>client.from(t).select("*",{count:"exact",head:false}).limit(1000)));queries.forEach((r,i)=>{if(r.error)return;const table=["leads","reservations","payments","operations","experiences"][i];if(table==="leads"){counts.leads.total=r.data?.length||0;(r.data||[]).forEach(x=>{if(counts.leads[x.status]!==undefined)counts.leads[x.status]++})}else counts[table]=r.data?.length||0});renderDashboard(counts)}
 function showDashboard(){currentModule="dashboard";moduleNav.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.module==="dashboard"));moduleTitle.textContent="Dashboard";moduleDescription.textContent="Vista general del negocio receptivo.";moduleEyebrow.textContent="CENTRO DE OPERACIONES";dashboardModule.classList.remove("hidden");dataModule.classList.add("hidden");settingsModule.classList.add("hidden");loadDashboard()}
@@ -79,19 +82,13 @@ async function deleteRecord(id){const cfg=MODULES[currentModule];if(!can("delete
 moduleNav.addEventListener("click",e=>{const btn=e.target.closest(".nav-item");if(!btn)return;moduleNav.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));btn.classList.add("active");if(btn.dataset.module==="dashboard")showDashboard();else if(btn.dataset.module==="settings")showSettings();else if(btn.dataset.module==="ai")showAI();else loadModule(btn.dataset.module)});
 tableBody.addEventListener("click",e=>{const edit=e.target.closest(".edit-btn"),del=e.target.closest(".delete-btn");if(edit)openModal(currentModule,edit.dataset.id);if(del)deleteRecord(del.dataset.id)});
 createBtn.addEventListener("click",()=>openModal(currentModule));refreshBtn.addEventListener("click",()=>currentModule==="dashboard"?showDashboard():currentModule==="settings"?showSettings():currentModule==="ai"?showAI():loadModule(currentModule));modalClose.addEventListener("click",closeModal);modalCancel.addEventListener("click",closeModal);recordForm.addEventListener("submit",async e=>{try{await saveRecord(e)}catch(err){formMessage.textContent=err.message||"No se pudo guardar."}});recordModal.addEventListener("click",e=>{if(e.target===recordModal)closeModal()});
-async function boot(){
- client=window.supabase&&SUPABASE_URL&&SUPABASE_ANON_KEY?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
- currentUser={id:"public-admin",email:"desarrollo"};
- currentProfile={id:"public-admin",full_name:"Desarrollo",role:"admin"};
- showApp();
- if(modeBadge)modeBadge.textContent="ADMIN · DESARROLLO";
- showDashboard();
-}
 async function establishSession(session){
+ if(!session?.user){currentUser=null;currentProfile=null;showLogin();return}
  currentUser=session.user;
  const {data,error}=await client.from("profiles").select("*").eq("id",currentUser.id).single();
  if(error||!data||![...ROLES].includes(data.role)){
-   setLoginMessage("La cuenta existe, pero no tiene un perfil staff válido.");
+   currentUser=null;currentProfile=null;
+   setLoginMessage("La cuenta existe, pero no tiene un perfil interno autorizado.");
    await client.auth.signOut();
    return;
  }
@@ -99,5 +96,29 @@ async function establishSession(session){
  modeBadge.textContent="ADMIN · "+String(data.role).toUpperCase();
  showApp();
  showDashboard();
+}
+async function signIn(e){
+ e.preventDefault();
+ if(!client)return setLoginMessage("Supabase no está configurado.");
+ setLoginMessage("");
+ loginBtn.disabled=true;
+ loginBtn.textContent="Ingresando…";
+ const {data,error}=await client.auth.signInWithPassword({
+   email:loginEmail.value.trim(),
+   password:loginPassword.value
+ });
+ loginBtn.disabled=false;
+ loginBtn.textContent="Entrar";
+ if(error){setLoginMessage(error.message);return}
+ await establishSession(data.session);
+}
+async function boot(){
+ client=window.supabase&&SUPABASE_URL&&SUPABASE_ANON_KEY?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+ if(!client){showLogin("Supabase no está configurado.");return}
+ loginForm?.addEventListener("submit",signIn);
+ logoutBtn?.addEventListener("click",async()=>{await client.auth.signOut();showLogin();loginPassword.value="";});
+ client.auth.onAuthStateChange((_event,session)=>{if(session)establishSession(session);else{currentUser=null;currentProfile=null;showLogin();}});
+ const {data:{session}}=await client.auth.getSession();
+ if(session)await establishSession(session);else showLogin();
 }
 boot();
