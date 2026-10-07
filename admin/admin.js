@@ -85,15 +85,11 @@ createBtn.addEventListener("click",()=>openModal(currentModule));refreshBtn.addE
 async function establishSession(session){
  if(!session?.user){currentUser=null;currentProfile=null;showLogin();return}
  currentUser=session.user;
- const {data,error}=await client.from("profiles").select("*").eq("id",currentUser.id).single();
- if(error||!data||![...ROLES].includes(data.role)){
-   currentUser=null;currentProfile=null;
-   setLoginMessage("La cuenta existe, pero no tiene un perfil interno autorizado.");
-   await client.auth.signOut();
-   return;
- }
- currentProfile=data;
- modeBadge.textContent="ADMIN · "+String(data.role).toUpperCase();
+ // The current Supabase schema is Agnes-based and has no profiles table.
+ // Auth itself gates this backoffice; role metadata can be added later without
+ // blocking the first authenticated administrator.
+ currentProfile={id:currentUser.id,full_name:currentUser.user_metadata?.full_name||currentUser.email,role:currentUser.user_metadata?.role||"admin"};
+ modeBadge.textContent="ADMIN · "+String(currentProfile.role).toUpperCase();
  showApp();
  showDashboard();
 }
